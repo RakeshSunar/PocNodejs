@@ -1,6 +1,25 @@
+import { useRouter } from 'next/navigation';
 import React from 'react'
 
 function Header() {
+   const router = useRouter();
+  const handleLogout = () => {
+    const confirmed = window.confirm("Are you sure you want to logout ?");
+    // console.log(confirmed,"confirmed")
+    if(confirmed){
+      // Remove the token cookie
+    document.cookie = 'token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;';
+    
+    // Update state
+    // setIsLoggedIn(false);
+    
+    // Redirect to home or login page
+    router.refresh('/');
+    }
+    
+    // Optional: You can also make an API call to logout on the server
+    // fetch('/api/logout', { method: 'POST' });
+  };
   return (
    <header className="header">
           <div className="header-container">
@@ -44,6 +63,8 @@ function Header() {
                 <div className="avatar">V</div>
                 <span className="username">Current User: Vinay</span>
               </div>
+              <button 
+              onClick={handleLogout} className='btn'>Logout</button>
             </div>
           </div>
     </header>

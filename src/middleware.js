@@ -1,5 +1,5 @@
-import { NextRequest, NextResponse } from "next/server";
-import { getSession } from "./utils/getSession";
+import { NextResponse } from "next/server";
+import { getSession } from "../utils/getSession";
 
 export async function middleware(request) {
     console.log("middleware is running!");
@@ -41,7 +41,7 @@ export async function middleware(request) {
 }
 
 export const config = {
-    matcher: ["/", "/login", "/register"]
+    matcher: ["/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt).*)"]
 };
 
 

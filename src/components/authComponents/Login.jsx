@@ -3,10 +3,12 @@
 import { useState } from 'react';
 import styles from './auth.module.css';
 import Link from 'next/link';
+import axios from 'axios';
+import { useRouter } from 'next/navigation';
 
 const SignIn = () => {
   const [formData, setFormData] = useState({
-    username: '',
+    email: '',
     password: '',
     rememberMe: false
   });
@@ -19,11 +21,48 @@ const SignIn = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log('Sign in form submitted:', formData);
-    // Add your sign in logic here
-  };
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+  //   console.log('Sign in form submitted:', formData);
+  //   // Add your sign in logic here
+  // };
+
+
+  const router = useRouter();
+
+const handleSubmit = async (e) => {
+  // debugger
+  e.preventDefault();
+
+  try {
+    const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/users/login`, {
+
+      email: formData.email,
+      password: formData.password
+    });
+    console.log("response",response)
+
+    if (response.status === 200) {
+      alert("Login successful!");
+        const expirationTime = new Date();
+        expirationTime.setTime(expirationTime.getTime() + (30 * 60 * 1000)); // 30 minutes in milliseconds
+        
+        document.cookie = `token=${response.data.token}; path=/; expires=${expirationTime.toUTCString()};`;
+      
+      // Store token or user info if needed
+      // localStorage.setItem("token", response.data.token); // if you send one
+      
+      router.push("/"); // or wherever you want to redirect after login
+    }
+  } catch (error) {
+    console.error("Login error:", error);
+    if (error.response?.data?.message) {
+      alert(error.response.data.message);
+    } else {
+      alert("Login failed. Please try again.");
+    }
+  }
+};
 
   return (
     <div className={styles.container}>
@@ -36,15 +75,15 @@ const SignIn = () => {
             
             <form onSubmit={handleSubmit} className={styles.form}>
               <div className={styles.inputGroup}>
-                <label htmlFor="username" className={styles.label}>Username</label>
+                <label htmlFor="email" className={styles.label}>Email</label>
                 <div className={styles.inputWrapper}>
                   <span className={styles.inputIcon}>👤</span>
                   <input
                     type="text"
-                    id="username"
-                    name="username"
-                    placeholder="Username"
-                    value={formData.username}
+                    id="email"
+                    name="email"
+                    placeholder="Email"
+                    value={formData.email}
                     onChange={handleInputChange}
                     className={styles.input}
                     required

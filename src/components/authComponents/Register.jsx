@@ -3,6 +3,8 @@
 import { useState } from 'react';
 import styles from './auth.module.css';
 import Link from 'next/link';
+import axios from 'axios';
+import { useRouter } from 'next/navigation';
 
 const SignUp = () => {
   const [formData, setFormData] = useState({
@@ -13,6 +15,8 @@ const SignUp = () => {
     agreeTerms: false
   });
 
+  const router = useRouter();
+
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData(prev => ({
@@ -21,11 +25,43 @@ const SignUp = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log('Sign up form submitted:', formData);
-    // Add your sign up logic here
-  };
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+  //   console.log('Sign up form submitted:', formData);
+  //   // Add your sign up logic here
+  // };
+const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  if (formData.password !== formData.confirmPassword) {
+    alert("Passwords do not match");
+    return;
+  }
+
+  try {
+    const response = await axios.post("http://localhost:4000/api/users/register", {
+      name: formData.username,
+      email: formData.email,
+      password: formData.password
+    });
+
+    if (response.status === 201) {
+      alert("User registered successfully!");
+      // Optionally reset form or redirect
+    router.push('/login')
+    }
+    
+  } catch (error) {
+    console.error("Registration error:", error);
+    if (error.response && error.response.data && error.response.data.message) {
+      alert(error.response.data.message);
+    } else {
+      alert("Something went wrong. Please try again.");
+    }
+  }
+};
+
+
 
   return (
     <div className={styles.container}>

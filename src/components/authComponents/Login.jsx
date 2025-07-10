@@ -21,17 +21,9 @@ const SignIn = () => {
     }));
   };
 
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
-  //   console.log('Sign in form submitted:', formData);
-  //   // Add your sign in logic here
-  // };
-
-
   const router = useRouter();
 
 const handleSubmit = async (e) => {
-  // debugger
   e.preventDefault();
 
   try {
@@ -40,18 +32,21 @@ const handleSubmit = async (e) => {
       email: formData.email,
       password: formData.password
     });
-    console.log("response",response)
-
+    // Handle the response
     if (response.status === 200) {
       alert("Login successful!");
+
+      // Set the token in a cookie
         const expirationTime = new Date();
         expirationTime.setTime(expirationTime.getTime() + (30 * 60 * 1000)); // 30 minutes in milliseconds
-        
+      
         document.cookie = `token=${response.data.token}; path=/; expires=${expirationTime.toUTCString()};`;
       
       // Store token or user info if needed
       // localStorage.setItem("token", response.data.token); // if you send one
-      
+
+
+      // Redirect to the home page
       router.push("/"); // or wherever you want to redirect after login
     }
   } catch (error) {
@@ -70,7 +65,7 @@ const handleSubmit = async (e) => {
       <div className={styles.content}>
         <div className={styles.formSection}>
           <div className={styles.formCard}>
-            <h2 className={styles.title}>Django Volt - Sign IN</h2>
+            <h2 className={styles.title}> Sign IN</h2>
             <p className={styles.subtitle}>Add your credentials</p>
             
             <form onSubmit={handleSubmit} className={styles.form}>

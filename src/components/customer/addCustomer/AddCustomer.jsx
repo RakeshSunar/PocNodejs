@@ -1,17 +1,18 @@
 "use client"
 import { useState } from "react"
 import styles from "./addCustomer.module.css"
+import axios from "axios"
 
 export default function AddCustomer() {
   const [formData, setFormData] = useState({
     name: "",
-    contactNo: "",
-    dateOfRegistration: "",
-    contractPeriod: "",
-    endDateOfContract: "",
+    contact_no: "",
+    date_of_registration: "",
+    contract_period: "",
+    end_date_of_contract: "",
     email: "",
-    totalAmount: "",
-    treatments: {
+    total_amount: "",
+    type_of_treatment: {
       termiteControl: false,
       generalDisinfection: false,
       woodBorer: false,
@@ -19,6 +20,8 @@ export default function AddCustomer() {
       rodentControl: false,
       birdNettingSpikestrol: false,
     },
+
+    // selectedTreatments: [],
     address: "",
   })
 
@@ -34,15 +37,16 @@ export default function AddCustomer() {
     const { name, checked } = e.target
     setFormData((prev) => ({
       ...prev,
-      treatments: {
-        ...prev.treatments,
+      type_of_treatment: {
+        ...prev.type_of_treatment,
         [name]: checked,
       },
     }))
   }
 
   const getSelectedTreatments = () => {
-    const selected = Object.entries(formData.treatments)
+
+    const selected = Object.entries(formData.type_of_treatment)
       .filter(([_, isSelected]) => isSelected)
       .map(([treatment, _]) => {
         switch (treatment) {
@@ -63,14 +67,64 @@ export default function AddCustomer() {
         }
       })
 
-    return selected.length > 0 ? selected.join(", ") : "Selected treatment will visible here"
+    return selected.length > 0 ? selected.join(",") : "Selected treatment will visible here"
   }
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    console.log("Form submitted:", formData)
-    // Handle form submission here
+
+  const handleSubmit = async (e) => {
+  e.preventDefault();
+
+  // Convert treatment object to array of selected treatment names
+  const selectedTreatments = Object.entries(formData.type_of_treatment)
+    .filter(([_, isSelected]) => isSelected)
+    .map(([treatment]) => {
+      switch (treatment) {
+        case "termiteControl":
+          return "Termite Control";
+        case "generalDisinfection":
+          return "General Disinfection";
+        case "woodBorer":
+          return "Wood Borer";
+        case "bedBugs":
+          return "Bed Bugs";
+        case "rodentControl":
+          return "Rodent Control";
+        case "birdNettingSpikestrol":
+          return "Bird Netting & Spikestrol";
+        default:
+          return null;
+      }
+    })
+    .filter(Boolean); // Remove nulls
+
+  // Prepare final data
+  const dataToSubmit = {
+    ...formData,
+    type_of_treatment: selectedTreatments, // ✅ array of strings
+  };
+
+  try {
+    const token = document.cookie.split("=")[2];
+    const response = await axios.post(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/customers`,
+      dataToSubmit,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (response.status === 200 || response.status === 201) {
+      alert("✅ Customer data submitted successfully!");
+    }
+  } catch (error) {
+    console.error("❌ Submission failed:", error.response?.data || error);
   }
+};
+
+  
 
   return (
     <div className={styles.container}>
@@ -92,8 +146,8 @@ export default function AddCustomer() {
             <label className={styles.label}>Contact no</label>
             <input
               type="tel"
-              name="contactNo"
-              value={formData.contactNo}
+              name="contact_no"
+              value={formData.contact_no}
               onChange={handleInputChange}
               placeholder="+12-345 678 910"
               className={styles.input}
@@ -107,8 +161,8 @@ export default function AddCustomer() {
             <label className={styles.label}>Date of Registration</label>
             <input
               type="date"
-              name="dateOfRegistration"
-              value={formData.dateOfRegistration}
+              name="date_of_registration"
+              value={formData.date_of_registration}
               onChange={handleInputChange}
               className={styles.dateInput}
             />
@@ -117,8 +171,8 @@ export default function AddCustomer() {
             <label className={styles.label}>Contract Period</label>
             <input
               type="number"
-              name="contractPeriod"
-              value={formData.contractPeriod}
+              name="contract_period"
+              value={formData.contract_period}
               onChange={handleInputChange}
               placeholder="No."
               className={styles.input}
@@ -128,8 +182,8 @@ export default function AddCustomer() {
             <label className={styles.label}>End Date of Contract</label>
             <input
               type="date"
-              name="endDateOfContract"
-              value={formData.endDateOfContract}
+              name="end_date_of_contract"
+              value={formData.end_date_of_contract}
               onChange={handleInputChange}
               className={styles.dateInput}
             />
@@ -152,8 +206,8 @@ export default function AddCustomer() {
           <div className={styles.fieldGroup}>
             <label className={styles.label}>Total Amount</label>
             <select
-              name="totalAmount"
-              value={formData.totalAmount}
+              name="total_amount"
+              value={formData.total_amount}
               onChange={handleInputChange}
               className={styles.select}
             >
@@ -179,7 +233,7 @@ export default function AddCustomer() {
                 type="checkbox"
                 id="termiteControl"
                 name="termiteControl"
-                checked={formData.treatments.termiteControl}
+                checked={formData.type_of_treatment.termiteControl}
                 onChange={handleCheckboxChange}
                 className={styles.checkbox}
               />
@@ -193,7 +247,7 @@ export default function AddCustomer() {
                 type="checkbox"
                 id="generalDisinfection"
                 name="generalDisinfection"
-                checked={formData.treatments.generalDisinfection}
+                checked={formData.type_of_treatment.generalDisinfection}
                 onChange={handleCheckboxChange}
                 className={styles.checkbox}
               />
@@ -207,7 +261,7 @@ export default function AddCustomer() {
                 type="checkbox"
                 id="woodBorer"
                 name="woodBorer"
-                checked={formData.treatments.woodBorer}
+                checked={formData.type_of_treatment.woodBorer}
                 onChange={handleCheckboxChange}
                 className={styles.checkbox}
               />
@@ -221,7 +275,7 @@ export default function AddCustomer() {
                 type="checkbox"
                 id="bedBugs"
                 name="bedBugs"
-                checked={formData.treatments.bedBugs}
+                checked={formData.type_of_treatment.bedBugs}
                 onChange={handleCheckboxChange}
                 className={styles.checkbox}
               />
@@ -235,7 +289,7 @@ export default function AddCustomer() {
                 type="checkbox"
                 id="rodentControl"
                 name="rodentControl"
-                checked={formData.treatments.rodentControl}
+                checked={formData.type_of_treatment.rodentControl}
                 onChange={handleCheckboxChange}
                 className={styles.checkbox}
               />
@@ -249,7 +303,7 @@ export default function AddCustomer() {
                 type="checkbox"
                 id="birdNettingSpikestrol"
                 name="birdNettingSpikestrol"
-                checked={formData.treatments.birdNettingSpikestrol}
+                checked={formData.type_of_treatment.birdNettingSpikestrol}
                 onChange={handleCheckboxChange}
                 className={styles.checkbox}
               />

@@ -1,6 +1,9 @@
+
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Sidebar from "@/components/sidebar/Sidebar";
+// import { usePathname } from "next/navigation";
+import SidebarWrapper from "@/components/sideBarWraper/SidebarWrapper";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -18,11 +21,16 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }) {
+  //  const pathname = usePathname();
+  // const hideSidebarRoutes = ['/login', '/register'];
+  // const showSidebar = !hideSidebarRoutes.includes(pathname);
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} app-container`}>
-        <Sidebar />
-        {children}
+        <SidebarWrapper>
+          {children}
+        </SidebarWrapper>
+        
       </body>
     </html>
   );

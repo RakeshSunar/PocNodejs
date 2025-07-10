@@ -24,9 +24,9 @@ function RecentCustomer({ customers }) {
                       {customers.map((customer, index) => (
                         <tr key={index}>
                           <td>{customer.name}</td>
-                          <td>{customer.treatment}</td>
-                          <td>{customer.contact}</td>
-                          <td>{customer.amount}</td>
+                          <td>{customer.type_of_treatment}</td>
+                          <td>{customer.contact_no}</td>
+                          <td>{customer.total_amount}</td>
                           <td>
                             <button className="view-button">View</button>
                           </td>

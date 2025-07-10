@@ -15,7 +15,6 @@ export const getSession = async ()=>{
     try {
         const cookieStore = await cookies();
         const token = cookieStore.get('token')?.value;
-        console.log("first token",token)
         return token || null;
     } catch (error) {
         console.error("Error getting server session:", error);

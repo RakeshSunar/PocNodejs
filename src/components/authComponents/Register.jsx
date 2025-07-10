@@ -69,7 +69,7 @@ const handleSubmit = async (e) => {
       <div className={styles.content}>
         <div className={styles.formSection}>
           <div className={styles.formCard}>
-            <h2 className={styles.title}>Django Volt - Sign UP</h2>
+            <h2 className={styles.title}> Sign UP</h2>
             <p className={styles.subtitle}>Add your credentials</p>
             
             <form onSubmit={handleSubmit} className={styles.form}>

@@ -1,7 +1,6 @@
 
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import Sidebar from "@/components/sidebar/Sidebar";
 // import { usePathname } from "next/navigation";
 import SidebarWrapper from "@/components/sideBarWraper/SidebarWrapper";
 

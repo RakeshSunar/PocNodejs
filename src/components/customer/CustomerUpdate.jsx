@@ -1,60 +1,85 @@
 // components/CustomerManagement.js
-'use client';
-import { useState } from 'react';
-import styles from './customer.module.css';
+"use client";
+import { useState, useEffect } from "react";
+import styles from "./customer.module.css";
+import axios from "axios";
 
 const CustomerUpadateDetails = () => {
   const [searchForm, setSearchForm] = useState({
-    customerName: '',
-    customerContactNo: ''
+    customerName: "",
+    customerContactNo: "",
   });
+  const [customers, setCustomers] = useState([]);
 
-  const [customers] = useState([
-    {
-      id: 3,
-      name: 'rishi',
-      contactNo: '9619438148',
-      date: '06/06/0170',
-      totalAmount: 10000,
-      Installment: 'Add Transaction'
-    },
-    {
-      id: 2,
-      name: 'Vishwajit Rajkumar Rajbhar',
-      contactNo: '9619438148',
-      date: '2022-05-25',
-      totalAmount: 10000,
-      Installment: 'Add Transaction'
-    },
-    {
-      id: 1,
-      name: 'Vishwajit Rajkumar Rajbhar',
-      contactNo: '8779546242',
-      date: '2022-05-27',
-      totalAmount: 10000,
-      Installment: 'add Transaction'
+
+  function getCookieValue(name) {
+    const cookieString = document.cookie;
+    const cookies = cookieString.split("; ");
+    for (let cookie of cookies) {
+      const [key, value] = cookie.split("=");
+      if (key === name) return value;
     }
-  ]);
+    return null;
+  }
 
+  
   const [currentPage, setCurrentPage] = useState(1);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setSearchForm(prev => ({
+    setSearchForm((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
+
   const handleSearch = () => {
-    console.log('Search criteria:', searchForm);
+    console.log("Search criteria:", searchForm);
     // Add your search logic here
   };
 
-  const handleAddTransaction = (customerId) => {
-    console.log('Add transaction for customer:', customerId);
-    // Add your transaction logic here
+
+  const fetchCustomers = async () => {
+    // const cookieStore = await cookies();
+    try {
+      // debugger
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/customers`,
+        {
+          headers: {
+            Authorization: `Bearer ${getCookieValue("token")}`,
+          },
+        }
+      );
+      console.log("response customersss", response.data);
+      setCustomers(response.data);
+    } catch (error) {
+      console.error("Failed to fetch customers:", error);
+    }
   };
+
+  const handleDelete = async (customerId) => {
+    try {
+      await axios.delete(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/customers/${customerId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${getCookieValue("token")}`,
+          },
+        }
+      );
+      // Update state or fetch customers again after deletion
+      fetchCustomers();
+    } catch (error) {
+      console.error("Failed to delete customer:", error);
+    }
+  };
+
+  
+  useEffect(() => {
+    fetchCustomers();
+  }, []);
 
   return (
     <div className={styles.container}>
@@ -115,12 +140,11 @@ const CustomerUpadateDetails = () => {
                 <tr key={customer.id} className={styles.tableRow}>
                   <td className={styles.td}>{customer.id}</td>
                   <td className={styles.td}>{customer.name}</td>
-                  <td className={styles.td}>{customer.contactNo}</td>
-                  <td className={styles.td}>{customer.date}</td>
-                  <td className={styles.td}>{customer.totalAmount}</td>
+                  <td className={styles.td}>{customer.contact_no}</td>
+                  <td className={styles.td}>{customer.date_of_registration}</td>
+                  <td className={styles.td}>{customer.total_amount}</td>
                   <td className={styles.td}>
                     <button
-                      onClick={() => handleAddTransaction(customer.id)}
                       className={styles.transactionButton}
                     >
                       Update
@@ -128,10 +152,10 @@ const CustomerUpadateDetails = () => {
                   </td>
                   <td className={styles.td}>
                     <button
-                      onClick={() => handleAddTransaction(customer.id)}
+                      onClick={() => handleDelete(customer.id)}
                       className={styles.transactionButton}
                     >
-                      delete
+                      Delete
                     </button>
                   </td>
                 </tr>
@@ -143,19 +167,25 @@ const CustomerUpadateDetails = () => {
         {/* Pagination */}
         <div className={styles.pagination}>
           <button
-            className={`${styles.pageButton} ${currentPage === 1 ? styles.active : ''}`}
+            className={`${styles.pageButton} ${
+              currentPage === 1 ? styles.active : ""
+            }`}
             onClick={() => setCurrentPage(1)}
           >
             1
           </button>
         </div>
       </div>
+ 
+
 
       {/* Footer */}
       <footer className={styles.footer}>
         <div className={styles.footerContent}>
           <span>© Nice Pest Control - Developed by Vimiratech.</span>
-          <a href="#" className={styles.footerLink}>Datacenter</a>
+          <a href="#" className={styles.footerLink}>
+            Datacenter
+          </a>
         </div>
       </footer>
     </div>

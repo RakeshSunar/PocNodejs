@@ -105,6 +105,7 @@ export default function AddCustomer() {
 
   try {
     const token = document.cookie.split("=")[2];
+    console.log(token,"tokennnn")
     const response = await axios.post(
       `${process.env.NEXT_PUBLIC_API_URL}/api/customers`,
       dataToSubmit,

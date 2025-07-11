@@ -1,10 +1,17 @@
 "use client";
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 function Sidebar() {
   const [isCustomerOpen, setCustomerOpen] = useState(false);
   const [isEmployeeOpen, setEmployeeOpen] = useState(false);
+    const router = useRouter();
+
+  const handleClick = () => {
+    router.push('/');
+  };
+
 
   return (
     <div className="sidebar">
@@ -17,7 +24,7 @@ function Sidebar() {
       <nav className="sidebar-nav">
         <div className="nav-items">
           {/* Dashboard */}
-          <div className="nav-item active">
+          <div onClick={handleClick} className="nav-item active">
             <div className="nav-icon-container">
               <div className="nav-icon-dot"></div>
             </div>

@@ -118,6 +118,26 @@ export default function AddCustomer() {
 
     if (response.status === 200 || response.status === 201) {
       alert("✅ Customer data submitted successfully!");
+       // Reset the form
+  setFormData({
+    name: "",
+    contact_no: "",
+    date_of_registration: "",
+    contract_period: "",
+    end_date_of_contract: "",
+    email: "",
+    total_amount: "",
+    type_of_treatment: {
+      termiteControl: false,
+      generalDisinfection: false,
+      woodBorer: false,
+      bedBugs: false,
+      rodentControl: false,
+      birdNettingSpikestrol: false,
+    },
+    address: "",
+  });
+      
     }
   } catch (error) {
     console.error("❌ Submission failed:", error.response?.data || error);

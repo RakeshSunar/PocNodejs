@@ -8,10 +8,6 @@ function Sidebar() {
   const [isEmployeeOpen, setEmployeeOpen] = useState(false);
     const router = useRouter();
 
-  const handleClick = () => {
-    router.push('/');
-  };
-
 
   return (
     <div className="sidebar">
@@ -24,7 +20,7 @@ function Sidebar() {
       <nav className="sidebar-nav">
         <div className="nav-items">
           {/* Dashboard */}
-          <div onClick={handleClick} className="nav-item active">
+          <div onClick={() => router.push('/')} className="nav-item active">
             <div className="nav-icon-container">
               <div className="nav-icon-dot"></div>
             </div>

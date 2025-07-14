@@ -225,19 +225,12 @@ export default function AddCustomer() {
           </div>
           <div className={styles.fieldGroup}>
             <label className={styles.label}>Total Amount</label>
-            <select
+            <input
               name="total_amount"
               value={formData.total_amount}
               onChange={handleInputChange}
               className={styles.select}
-            >
-              <option value="">No.</option>
-              <option value="5000">₹5,000</option>
-              <option value="10000">₹10,000</option>
-              <option value="15000">₹15,000</option>
-              <option value="20000">₹20,000</option>
-              <option value="25000">₹25,000</option>
-            </select>
+            />
           </div>
         </div>
 

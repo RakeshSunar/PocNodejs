@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getSession } from "../utils/getSession";
 
 export async function middleware(request) {
+    // debugger
     const session = await getSession();
     const userNavigatingRoute = request.nextUrl.pathname;
 

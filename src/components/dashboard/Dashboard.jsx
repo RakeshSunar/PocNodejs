@@ -12,16 +12,27 @@ import axios from "axios"
 
 export default function Dashboard() {
   const [customers, setCustomers] = useState([])
+  function getCookieValue(name) {
+  const cookieString = document.cookie;
+  const cookies = cookieString.split('; ');
+  for (let cookie of cookies) {
+    const [key, value] = cookie.split('=');
+    if (key === name) return value;
+  }
+  return null;
+}
+
 const fetchCustomers = async () => {
   // const cookieStore = await cookies();
+  // console.log(document.cookie.split("=")[2],"document.cookie.split("=")[2]")
       try {
         // debugger
         const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/customers`,{
           headers: {
-            Authorization: `Bearer ${document.cookie.split("=")[2]}`,
+            Authorization: `Bearer ${getCookieValue('token')}`,
           },
         })
-        console.log("response customers", response.data)
+        // console.log("response customers", response.data)
         setCustomers(response.data)
       } catch (error) {
         console.error("Failed to fetch customers:", error)

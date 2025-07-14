@@ -38,7 +38,7 @@ const handleSubmit = async (e) => {
 
       // Set the token in a cookie
         const expirationTime = new Date();
-        expirationTime.setTime(expirationTime.getTime() + (30 * 60 * 1000)); // 30 minutes in milliseconds
+        expirationTime.setTime(expirationTime.getTime() + (24 * 60 * 60 * 1000)); // 1 day in milliseconds
       
         document.cookie = `token=${response.data.token}; path=/; expires=${expirationTime.toUTCString()};`;
       

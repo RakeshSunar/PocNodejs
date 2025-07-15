@@ -1,52 +1,66 @@
-"use client"
-import { useState } from "react"
-import styles from "./addEmployee.module.css"
+"use client";
+import { useState } from "react";
+import styles from "./addEmployee.module.css";
+import axios from "axios";
+import { getCookieValue } from "../../../../utils/getCookie";
 
 export default function AddEmployee() {
   const [formData, setFormData] = useState({
     name: "",
-    contactNo: "",
-    dateOfRegistration: "",
-    contractPeriod: "",
-    endDateOfContract: "",
+    contact_no: "",
+    date_of_joining: "",
+    bond_period_number: "",
+    bond_period_date: "",
     email: "",
-    totalAmount: "",
-    treatments: {
-      termiteControl: false,
-      generalDisinfection: false,
-      woodBorer: false,
-      bedBugs: false,
-      rodentControl: false,
-      birdNettingSpikestrol: false,
-    },
-    address: "",
-  })
+    adharcard_no: "",
+    salary: "",
+    residential_address: "",
+  });
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target
+    const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
       [name]: value,
-    }))
-  }
+    }));
+  };
 
-  const handleCheckboxChange = (e) => {
-    const { name, checked } = e.target
-    setFormData((prev) => ({
-      ...prev,
-      treatments: {
-        ...prev.treatments,
-        [name]: checked,
-      },
-    }))
-  }
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+debugger
+     try {
+    const token = getCookieValue("token");
+      console.log("token", token);
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/employees`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
-  const handleSubmit = (e) => {
-    e.preventDefault()
-    console.log("Form submitted:", formData)
-    // Handle form submission here
-  }
-
+      if (response.status === 200 || response.status === 201) {
+        alert("✅ Employee added successfully!");
+        setFormData({
+          name: "",
+          contact_no: "",
+          date_of_joining: "",
+          bond_period_number: "",
+          bond_period_date: "",
+          email: "",
+          adharcard_no: "",
+          salary: "",
+          residential_address: "",
+        });
+      }
+    } catch (error) {
+      console.error("❌ Submission failed:", error.response?.data || error);
+      alert("Submission failed. Please try again.");
+    }
+  };
   return (
     <div className={styles.container}>
       <h2 className={styles.title}>Employee information</h2>
@@ -68,8 +82,8 @@ export default function AddEmployee() {
             <label className={styles.label}>Contact no</label>
             <input
               type="tel"
-              name="contactNo"
-              value={formData.contactNo}
+              name="contact_no"
+              value={formData.contact_no}
               onChange={handleInputChange}
               placeholder="+12-345 678 910"
               className={styles.input}
@@ -83,8 +97,8 @@ export default function AddEmployee() {
             <label className={styles.label}>Date of joining</label>
             <input
               type="date"
-              name="dateOfRegistration"
-              value={formData.dateOfRegistration}
+              name="date_of_joining"
+              value={formData.date_of_joining}
               onChange={handleInputChange}
               className={styles.dateInput}
             />
@@ -93,26 +107,26 @@ export default function AddEmployee() {
             <label className={styles.label}>Bond Period</label>
             <input
               type="number"
-              name="contractPeriod"
-              value={formData.contractPeriod}
+              name="bond_period_number"
+              value={formData.bond_period_number}
               onChange={handleInputChange}
               placeholder="No."
               className={styles.input}
             />
           </div>
           <div className={styles.fieldGroup}>
-            <label className={styles.label}>Bond Period</label>
+            <label className={styles.label}>End of Bond Period</label>
             <input
               type="date"
-              name="endDateOfContract"
-              value={formData.endDateOfContract}
+              name="bond_period_date"
+              value={formData.bond_period_date}
               onChange={handleInputChange}
               className={styles.dateInput}
             />
           </div>
         </div>
 
-        {/* Email and Total Amount Row */}
+        {/* Email and Aadhar + Salary Row */}
         <div className={`${styles.row} ${styles.rowTwo}`}>
           <div className={styles.fieldGroup}>
             <label className={styles.label}>Email</label>
@@ -128,11 +142,11 @@ export default function AddEmployee() {
           <div className={styles.fieldGroup}>
             <label className={styles.label}>Adharcard No</label>
             <input
-              type="number"
-              name="text"
-              value={formData.email}
+              type="text"
+              name="adharcard_no"
+              value={formData.adharcard_no}
               onChange={handleInputChange}
-              placeholder="abc@company.com"
+              placeholder="1234-5678-9012"
               className={styles.input}
             />
           </div>
@@ -140,26 +154,22 @@ export default function AddEmployee() {
             <label className={styles.label}>Salary</label>
             <input
               type="number"
-              name="text"
-              value={formData.email}
+              name="salary"
+              value={formData.salary}
               onChange={handleInputChange}
-              placeholder="abc@company.com"
+              placeholder="e.g. 35000"
               className={styles.input}
             />
           </div>
-          
         </div>
-
 
         {/* Location Section */}
         <div className={styles.locationSection}>
-          {/* <h3 className={styles.locationTitle}>Residential Address</h3> */}
-
           <div className={styles.addressField}>
             <label className={styles.label}>Residential Address</label>
             <textarea
-              name="address"
-              value={formData.address}
+              name="residential_address"
+              value={formData.residential_address}
               onChange={handleInputChange}
               placeholder="Enter your home address"
               className={styles.textArea}
@@ -174,5 +184,5 @@ export default function AddEmployee() {
         </button>
       </form>
     </div>
-  )
+  );
 }

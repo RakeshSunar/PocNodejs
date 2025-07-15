@@ -2,14 +2,9 @@
 
 import Link from 'next/link';
 import styles from './CustomerDetails.module.css'
-import axios from 'axios';
-import { getCookieValue } from '../../../utils/getCookie';
-import { useEffect, useState } from 'react';
 
-export default  function CustomerDetailsView({customerData}) {
-  // customerData.map(c =>{
-  //   console.log(c.name,"c.name")
-  // })
+export default  function CustomerDetailsView({customerData,customerId}) {
+
   // const customer = {
   //   name: 'rishi',
   //   contact_no: '9619438148',
@@ -40,36 +35,6 @@ export default  function CustomerDetailsView({customerData}) {
       next_installment_date: '2025-08-31',
     },
   ];
-
-  // const token = getCookieValue("token")
-
-  // const CustomerViewData= await axios.get( `${process.env.NEXT_PUBLIC_API_URL}/api/customers`,{headers:{Authorization: `Bearer ${token}`}})
-
-  // console.log("CustomerViewData",CustomerViewData)
-
-
-  //   const [customerData, setCustomerData] = useState(null);
-  // const [transactions, setTransactions] = useState([]);
-
-  // useEffect(() => {
-  //   const fetchData = async () => {
-  //     try {
-  //       const token = getCookieValue("token");
-  //       const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/customers/${cid}`, {
-  //         headers: { Authorization: `Bearer ${token}` }
-  //       });
-
-  //       console.log("res",res.data)
-
-  //       setCustomerData(res.data.customer); // adjust based on response
-  //       setTransactions(res.data.transactions); // adjust based on response
-  //     } catch (error) {
-  //       console.error('Error fetching customer data:', error);
-  //     }
-  //   };
-
-  //   fetchData();
-  // }, []);
 
   if (!customerData) return <div>Loading...</div>;
   return (
@@ -197,7 +162,7 @@ export default  function CustomerDetailsView({customerData}) {
 
         <br />
         <center>
-          <Link href="#" className={styles.btn_primary}>
+          <Link href={`/addcustomertransaction/${customerId}`} className={styles.btn_primary}>
             Add New Record
           </Link>
         </center>

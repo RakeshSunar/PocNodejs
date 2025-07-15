@@ -2,6 +2,7 @@
 import { useState } from "react"
 import styles from "./addCustomer.module.css"
 import axios from "axios"
+import { getCookieValue } from "../../../../utils/getCookie"
 
 export default function AddCustomer() {
   const [formData, setFormData] = useState({
@@ -104,7 +105,7 @@ export default function AddCustomer() {
   };
 
   try {
-    const token = document.cookie.split("=")[2];
+    const token = getCookieValue("token");
     const response = await axios.post(
       `${process.env.NEXT_PUBLIC_API_URL}/api/customers`,
       dataToSubmit,

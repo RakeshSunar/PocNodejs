@@ -1,7 +1,10 @@
 // 'use client'
+import { useRouter } from 'next/navigation'
 import React from 'react'
 
 function RecentCustomer({ customers }) {
+
+  const router=useRouter()
   return (
    <div className="card">
               <div className="card-header">
@@ -28,7 +31,7 @@ function RecentCustomer({ customers }) {
                           <td>{customer.contact_no}</td>
                           <td>{customer.total_amount}</td>
                           <td>
-                            <button className="view-button">View</button>
+                            <button onClick={() => router.push(`/customerview/${customer.id}`)}className="view-button">View</button>
                           </td>
                         </tr>
                       ))}

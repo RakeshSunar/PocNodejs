@@ -49,7 +49,7 @@ export default function AddEmployee() {
 
   return (
     <div className={styles.container}>
-      <h2 class={styles.title}>Employee information</h2>
+      <h2 className={styles.title}>Employee information</h2>
       <form onSubmit={handleSubmit} className={styles.formGrid}>
         {/* Name and Contact Row */}
         <div className={`${styles.row} ${styles.rowTwo}`}>

@@ -1,0 +1,128 @@
+.mainWrapper{
+    width: 100%;
+    overflow-y: scroll;
+}
+
+.card {
+  background-color: #fff;
+  border-radius: 0.75rem;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.08);
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.card h2 {
+  font-size: 1.25rem;
+  margin-bottom: 1.5rem;
+  font-weight: 600;
+  text-align: center;
+}
+
+.form_group {
+  margin-bottom: 1rem;
+}
+
+.form_control {
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.375rem;
+  border: 1px solid #ced4da;
+  background-color: #e9ecef;
+  color: #495057;
+  font-size: 0.95rem;
+}
+
+.form_control[readonly] {
+  background-color: #e9ecef;
+  opacity: 1;
+}
+.input_wrapper{
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.input_container{
+    margin:  12px;
+}
+
+.input_container input{
+    margin-top: 5px;
+}
+
+.input_group {
+  display: flex;
+  align-items: center;
+}
+
+.input_group_text {
+  padding: 0.5rem 0.75rem;
+  background-color: #e9ecef;
+  border: 1px solid #ced4da;
+  border-right: none;
+  border-radius: 0.375rem 0 0 0.375rem;
+}
+
+.table_responsive {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+.table thead {
+  background-color: #1a202c;
+  color: white;
+  font-size: 0.875rem;
+}
+
+.table th,
+.table td {
+  padding: 0.75rem;
+  border: 1px solid #dee2e6;
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+.actions a {
+  margin: 0 0.5rem;
+  color: #007bff;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.actions a:hover {
+  text-decoration: underline;
+}
+
+.total-amounts {
+  margin-top: 1rem;
+  font-size: 1rem;
+}
+
+.total_amounts p {
+  margin: 0.3rem 0;
+}
+
+.center_btn {
+  text-align: center;
+  margin: 2rem 0;
+}
+
+.btn_primary {
+  background-color: #1a202c;
+  color: #fff;
+  border: none;
+  padding: 0.6rem 1.5rem;
+  font-size: 1rem;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  text-decoration: none;
+}
+
+.btn_primary:hover {
+  background-color: #2d3748;
+}

@@ -1,12 +1,14 @@
 // components/CustomerManagement.js
 'use client';
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import styles from '../customer/customer.module.css';
 import Header from '../header/Header';
 import { getCookieValue } from '../../../utils/getCookie';
 import axios from 'axios';
 
 const EmployeeUpadateDetails = () => {
+  const router = useRouter();
   const [searchForm, setSearchForm] = useState({
     customerName: '',
     customerContactNo: ''
@@ -51,9 +53,20 @@ const [employees, setEmployees] = useState([])
     // Add your search logic here
   };
 
-  const handleAddTransaction = (customerId) => {
-    console.log('Add transaction for customer:', customerId);
-    // Add your transaction logic here
+  const handleAddTransaction = (employeeId) => {
+    router.push(`/updateemployee/${employeeId}`);
+  };
+
+  const handleCheckRecords = (employeeId) => {
+    router.push(`/employeeprofileview/${employeeId}`);
+  };
+
+  // Helper to format date as YYYY-MM-DD
+  const formatDate = (dateStr) => {
+    if (!dateStr) return "";
+    const d = new Date(dateStr);
+    if (isNaN(d)) return "";
+    return d.toISOString().slice(0, 10);
   };
 
   return (
@@ -108,6 +121,7 @@ const [employees, setEmployees] = useState([])
                 <th className={styles.th}>Date</th>
                 <th className={styles.th}>Total Salary Amount</th>
                 <th className={styles.th}>Installment</th>
+                <th className={styles.th}>Records</th>
               </tr>
             </thead>
             <tbody>
@@ -116,7 +130,7 @@ const [employees, setEmployees] = useState([])
                   <td className={styles.td}>{customer.id}</td>
                   <td className={styles.td}>{customer.employee_name}</td>
                   <td className={styles.td}>{customer.contact_no}</td>
-                  <td className={styles.td}>{customer.date_of_joining}</td>
+                  <td className={styles.td}>{formatDate(customer.date_of_joining)}</td>
                   <td className={styles.td}>{customer.salary}</td>
                   <td className={styles.td}>
                     <button
@@ -124,6 +138,14 @@ const [employees, setEmployees] = useState([])
                       className={styles.transactionButton}
                     >
                        + Add Transaction
+                    </button>
+                  </td>
+                  <td className={styles.td}>
+                    <button
+                      onClick={() => handleCheckRecords(customer.id)}
+                      className={styles.transactionButton}
+                    >
+                       Check Records
                     </button>
                   </td>
                 </tr>

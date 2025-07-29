@@ -444,3 +444,148 @@ body {
     width: 20px;
     fill: white;
 }
+
+
+
+/* Employee salary  Styles */
+
+
+.salary-popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.salary-popup-container {
+  background: #fff;
+  padding: 25px;
+  border-radius: 10px;
+  max-width: 600px;
+  width: 90%;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+  position: relative;
+}
+
+.salary-popup-close {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 24px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.salary-popup-title {
+  font-size: 20px;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.salary-popup-divider {
+  margin-bottom: 20px;
+}
+
+.salary-popup-employee-details,
+.salary-popup-advance-details {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 15px;
+}
+
+.salary-popup-actual-salary {
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+.salary-popup-section-title {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.salary-popup-table {
+  margin-bottom: 20px;
+}
+
+.salary-popup-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.salary-btn-close,
+.salary-btn-print {
+  flex: 1;
+  padding: 8px 12px;
+  font-weight: 500;
+  border-radius: 4px;
+  border: none;
+  cursor: pointer;
+}
+.salary-btn-close {
+  background-color: #fbbf24;}
+.salary-btn-close:hover {
+  background-color: #f59e0b;}
+.salary-btn-print {
+  background-color: black;
+color: white;}
+.salary-btn-print:hover {
+  background-color: #1e293b;}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .salary-popup-container {
+    padding: 15px;
+    max-width: 95%;
+  }
+
+  .salary-popup-title {
+    font-size: 18px;
+  }
+
+  .salary-popup-section-title {
+    font-size: 15px;
+  }
+
+  .salary-popup-close {
+    font-size: 20px;
+    top: 8px;
+    right: 10px;
+  }
+
+  .salary-popup-actions {
+    flex-direction: column;
+  }
+
+  .salary-btn-close,
+  .salary-btn-print {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .salary-popup-title {
+    font-size: 16px;
+  }
+
+  .salary-popup-actual-salary,
+  .salary-popup-section-title {
+    font-size: 14px;
+  }
+
+  .salary-popup-close {
+    font-size: 18px;
+  }
+}
+
+

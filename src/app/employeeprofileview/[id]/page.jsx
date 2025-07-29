@@ -126,13 +126,13 @@ const handleCloseSalaryPopup = () => {
       if (type === "leave") setLeaveRecords(Array.isArray(data)
         ? data.map(lr => ({
             leave_id: lr.leave_id || lr.id,
-            ApplyDate: lr.apply_date ? new Date(lr.apply_date).toISOString().slice(0, 10) : '',
+            ApplyDate: lr.apply_date ? dateFormat(lr.apply_date) : '',
             EmployeeName: employee ? employee.employee_name : '',
             Purpose: lr.purpose || '',
           }))
         : data ? [{
             leave_id: data.leave_id || data.id,
-            ApplyDate: data.apply_date ? new Date(data.apply_date).toISOString().slice(0, 10) : '',
+            ApplyDate: data.apply_date ? dateFormat(data.apply_date) : '',
             EmployeeName: employee ? employee.employee_name : '',
             Purpose: data.purpose || '',
           }] : []);
@@ -323,7 +323,7 @@ const handleCloseSalaryPopup = () => {
                 {leaveRecords.map((record, index) => (
                   <tr key={index}>
                     <td>{record.leave_id || record.id}</td>
-                    <td>{record.ApplyDate || record.date}</td>
+                    <td>{record.ApplyDate || (record.date)}</td>
                     <td>{record.EmployeeName || record.name}</td>
                     <td>{record.Purpose || record.purpose}</td>
                     <td>...</td>
@@ -376,6 +376,7 @@ const handleCloseSalaryPopup = () => {
                         ? dateFormat(record.PaymentDate)
                         : ''}
                     </td>
+                    <td>
                      <button
                   style={{
                     color: 'blue',
@@ -389,6 +390,7 @@ const handleCloseSalaryPopup = () => {
                 >
                   Click here to see details
                 </button>
+                </td>
                     {/* <td><button style={{ color: 'blue', background: 'transparent', cursor: 'pointer', fontWeight: 'bold', padding:"10px", border:"none"}}>Click here to see details</button></td> */}
                     <td
                       style={{ cursor: 'pointer', color: 'red', fontWeight: 'bold' }}

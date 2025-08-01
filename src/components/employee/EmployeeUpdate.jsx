@@ -120,7 +120,7 @@ const [employees, setEmployees] = useState([])
                 <th className={styles.th}>Contact no</th>
                 <th className={styles.th}>Date</th>
                 <th className={styles.th}>Total Salary Amount</th>
-                <th className={styles.th}>Installment</th>
+                <th className={styles.th}>Edit Details</th>
                 <th className={styles.th}>Records</th>
               </tr>
             </thead>
@@ -137,7 +137,7 @@ const [employees, setEmployees] = useState([])
                       onClick={() => handleAddTransaction(customer.id)}
                       className={styles.transactionButton}
                     >
-                       + Add Transaction
+                       Update
                     </button>
                   </td>
                   <td className={styles.td}>

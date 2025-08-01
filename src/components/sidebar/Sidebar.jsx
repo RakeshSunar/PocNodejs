@@ -59,8 +59,8 @@ function Sidebar() {
           {isEmployeeOpen && (
             <div className="dropdown">
               <Link href="/addemployee" className="dropdown-item">Add Employee</Link> 
-              <Link href="/employee-update" className="dropdown-item">Update Details</Link>
-              <Link href="/employee-records" className="dropdown-item">Check Records</Link>
+              <Link href="/employee-update" className="dropdown-item">Check & Update Details</Link>
+              {/* <Link href="/employee-records" className="dropdown-item"> Records</Link> */}
             </div>
           )}
         </div>

@@ -5,6 +5,7 @@ import styles from './auth.module.css';
 import Link from 'next/link';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
+import useAuthStore from '../../../store/store';
 
 const SignIn = () => {
   const [formData, setFormData] = useState({
@@ -12,6 +13,8 @@ const SignIn = () => {
     password: '',
     rememberMe: false
   });
+
+  const login = useAuthStore((state) => state.login)
 
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -38,9 +41,10 @@ const handleSubmit = async (e) => {
 
       // Set the token in a cookie
         const expirationTime = new Date();
-        expirationTime.setTime(expirationTime.getTime() + (24 * 60 * 60 * 1000)); // 1 day in milliseconds
+        expirationTime.setTime(expirationTime.getTime() + (24 * 60 * 60 * 1000));  // 1 day in milliseconds
       
         document.cookie = `token=${response.data.token}; path=/; expires=${expirationTime.toUTCString()};`;
+        login(response.data.user.name)
       
       // Store token or user info if needed
       // localStorage.setItem("token", response.data.token); // if you send one

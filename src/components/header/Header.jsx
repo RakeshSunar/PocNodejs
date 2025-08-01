@@ -1,8 +1,11 @@
 import { useRouter } from 'next/navigation';
 import React from 'react'
+import useAuthStore from '../../../store/store';
 
 function Header() {
    const router = useRouter();
+   const { username } = useAuthStore()
+  //  console.log(username,"username from header")
   const handleLogout = () => {
     const confirmed = window.confirm("Are you sure you want to logout ?");
     // console.log(confirmed,"confirmed")
@@ -60,8 +63,8 @@ function Header() {
                 </svg>
               </button>
               <div className="user-profile">
-                <div className="avatar">V</div>
-                <span className="username">Current User: Vinay</span>
+                <div className="avatar">{(username.charAt(0)).toUpperCase()}</div>
+                <span className="username">Current User: {username}</span>
               </div>
               <button 
               onClick={handleLogout} className='btn'>Logout</button>

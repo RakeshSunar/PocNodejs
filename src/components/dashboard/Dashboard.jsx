@@ -24,7 +24,6 @@ const fetchCustomers = async () => {
             Authorization: `Bearer ${token}`,
           },
         })
-        console.log("response customers", response.data)
         setCustomers(response.data)
       } catch (error) {
         console.error("Failed to fetch customers:", error)

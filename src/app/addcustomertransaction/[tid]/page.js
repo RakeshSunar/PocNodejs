@@ -23,12 +23,12 @@ function page (propsPromise){
         console.error('Error fetching customer data:', error);
       }
     };
-
+  
     fetchData();
   }, []);
     return (
    
-        <AddCustomerTransaction customerData={customerData}/>
+        <AddCustomerTransaction customerData={customerData} cutomerId={params.tid}/>
     )
 
 }

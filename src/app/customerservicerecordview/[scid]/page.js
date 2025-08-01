@@ -1,55 +1,81 @@
-'use client';
-
-import Link from 'next/link';
-import styles from './CustomerDetails.module.css'
-import { getCookieValue } from '../../../utils/getCookie';
+"use client";
+import React, { useEffect, useState, use } from 'react'
+import styles from '@/components/customer/CustomerDetails.module.css'
 import axios from 'axios';
+import { getCookieValue } from '../../../../utils/getCookie';
+import  Link  from 'next/link';
 
-export default  function CustomerDetailsView({customerData,customerId,transactions}) {
 
-  // const customer = {
-  //   name: 'rishi',
-  //   contact_no: '9619438148',
-  //   type_of_treatment: 'General Disinfestation,',
-  //   date_of_registration: '2020-06-06',
-  //   contract_period: 1,
-  //   end_date_of_contract: '2022-05-27',
-  //   total_amount: 10000,
-  //   paid: 7500,
-  //   remaining: 2500,
-  // };
+ function CustomerServiceRecordview(propsPromise) {
+  const params  = use(propsPromise.params);
+    const [customerData, setCustomerData] = useState({
+      name: "",
+      contact_no: "",
+      date_of_registration: "",
+      contract_period: "",
+      end_date_of_contract: "",
+      email: "",
+      total_amount: "",
+      type_of_treatment: {
+        termiteControl: false,
+        generalDisinfection: false,
+        woodBorer: false,
+        bedBugs: false,
+        rodentControl: false,
+        birdNettingSpikestrol: false,
+      },
 
-  // let transactions = [
-  //   {
-  //     id: 1,
-  //     amount: 5000,
-  //     date_of_payment: 'May 8, 2022',
-  //     purpose: 'Full Payment',
-  //     next_installment_date: 'NA',
-  //   },
-  //   {
-  //     id: 2,
-  //     amount: 2500,
-  //     date_of_payment: 'July 11, 2025',
-  //     purpose: 'Part Payment',
-  //     next_installment_date: '2025-08-31',
-  //   },
-  // ];
 
+    });
+  const [service, setService] = useState([]);
+    useEffect(() => {
+        const fetchData = async () => {
+        try {
+            const token = getCookieValue("token");
+            const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/customers/${params.scid}`, {
+            headers: { Authorization: `Bearer ${token}` }
+            });
+
+            setCustomerData(res.data); // adjust based on response 
+        } catch (error) {
+            console.error('Error fetching customer data:', error);
+        }
+        };
+
+        const fetchTransactionData = async () => {
+        try {
+            const token = getCookieValue("token");
+            const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/services/${params.scid}`, {
+            headers: { Authorization: `Bearer ${token}` }
+            });
+
+            console.log("services",res.data)
+
+            setService(res.data); // adjust based on response // adjust based on response
+        } catch (error) {
+            console.error('Error fetching customer data:', error);
+        }
+        };
+
+        fetchData();
+        fetchTransactionData()
+
+  }, []);
 
   const handleDelete = (id) =>{
       try {
         const token = getCookieValue("token");
-        axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/api/transactions/${id}`, {
+        axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/api/services/${id}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         if(typeof window !== 'undefined'){
           window.location.reload();
         }
       } catch (error) {
-        console.error('Error deleting customer transaction:', error);
+        console.error('Error deleting Service record:', error);
       }
   }
+
   if (!customerData) return <div>Loading...</div>;
   return (
       <div className={styles.mainWrapper}>
@@ -146,27 +172,29 @@ export default  function CustomerDetailsView({customerData,customerId,transactio
           <table className={styles.table}>
             <thead className={styles.thead_dark}>
               <tr>
-                <th>Transaction ID</th>
-                <th>Amount</th>
-                <th>Date of Payment</th>
+                <th>Date Of Service</th>
+                <th>Operator Name</th>
+                <th>Other Operator</th>
                 <th>Purpose</th>
-                <th>Next Installment Date</th>
+                <th>Classification</th>
+                <th>Next Service Date</th>
                 <th>Actions</th>
               </tr>
             </thead>
             <tbody>
-              {transactions.map((txn,i) => (
+              {service.map((service,i) => (
                 <tr key={i}>
-                  <td>{txn.TransactionId}</td>
-                  <td>{txn.TransactionAmount}</td>
-                  <td>{txn.PaymentDate.split('T')[0]}</td>
-                  <td>{txn.Purpose}</td>
-                  <td>{txn.NextInstallmentDate.split('T')[0]}</td>
+                  <td>{service.date_of_service.split('T')[0]}</td>
+                  <td>{service.operator_name === "External Operator" ? "-" :  service.operator_name}</td>
+                  <td>{service.other_operator_name || ''}</td>
+                  <td>{service.purpose}</td>
+                  <td>{service.classification}</td>
+                  <td>{service.next_service_date.split('T')[0]}</td>
                   <td>
-                    <Link href={`/customertransactionedit/${txn.TransactionId}`} >
+                    <Link href={`/customerservicerecordedit/${params.scid}`} >
                       <span >Edit</span>
                     </Link>
-                    <button onClick={()=>handleDelete(txn.TransactionId)} >Delete</button>
+                    <button onClick={()=>handleDelete(service.id)} >Delete</button>
                   </td>
                 </tr>
               ))}
@@ -176,11 +204,12 @@ export default  function CustomerDetailsView({customerData,customerId,transactio
 
         <br />
         <center>
-          <Link href={`/addcustomertransaction/${customerId}`} className={styles.btn_primary}>
+          <Link href={`/addcustomerservicerecord/${params.scid}`} className={styles.btn_primary}>
             Add New Record
           </Link>
         </center>
       </div>
-    
   );
 }
+
+export default CustomerServiceRecordview

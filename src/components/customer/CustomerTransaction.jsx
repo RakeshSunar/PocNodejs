@@ -3,6 +3,8 @@
 import {useState, useEffect}  from 'react';
 import styles from './customer.module.css';
 import axios from 'axios';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 const CustomerTransaction = () => {
   const [searchForm, setSearchForm] = useState({
@@ -32,14 +34,12 @@ const fetchCustomers = async () => {
             Authorization: `Bearer ${getCookieValue('token')}`,
           },
         })
-        console.log("response customersss", response.data)
         setCustomers(response.data)
       } catch (error) {
         console.error("Failed to fetch customers:", error)
       }
     }
   useEffect(() => {
-    
 
     fetchCustomers()
   }, [])
@@ -58,10 +58,12 @@ const fetchCustomers = async () => {
     // Add your search logic here
   };
 
-  const handleAddTransaction = (customerId) => {
-    console.log('Add transaction for customer:', customerId);
-    // Add your transaction logic here
-  };
+  // const handleAddTransaction = (customerId) => {
+  //   console.log('Add transaction for customer:', customerId);
+  //   const route = useRouter()
+  //   route.push(`'/customertransactionview/${customerId}'`)
+  //   // Add your transaction logic here
+  // };
 
   return (
     <div className={styles.container}>
@@ -125,12 +127,14 @@ const fetchCustomers = async () => {
                   <td className={styles.td}>{customer.date_of_registration}</td>
                   <td className={styles.td}>{customer.total_amount}</td>
                   <td className={styles.td}>
-                    <button
-                      onClick={() => handleAddTransaction(customer.id)}
+                    <Link
+                      // onClick={() => handleAddTransaction(customer.id)}
+                      href={`/customertransactionview/${customer.id}`}
                       className={styles.transactionButton}
+
                     >
                       + Add Transaction
-                    </button>
+                    </Link>
                   </td>
                 </tr>
               ))}

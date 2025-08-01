@@ -1,11 +1,13 @@
 "use client"
-import { useState } from "react"
-import styles from "./addCustomer.module.css"
+import { use, useEffect, useState } from "react"
+import styles from "../../../components/customer/addCustomer/addCustomer.module.css"
 import axios from "axios"
-import { getCookieValue } from "../../../../utils/getCookie"
-import { useRouter } from "next/navigation"
+import { getCookieValue } from "../../../../utils/getCookie";
+import { useRouter } from "next/navigation";
 
-export default function AddCustomer() {
+export default function AddCustomer(propsPromise) {
+    const params = use(propsPromise.params);
+    const router =useRouter()
   const [formData, setFormData] = useState({
     name: "",
     contact_no: "",
@@ -26,8 +28,6 @@ export default function AddCustomer() {
     // selectedTreatments: [],
     address: "",
   })
-
-  const router = useRouter();
 
   const handleInputChange = (e) => {
     const { name, value } = e.target
@@ -74,6 +74,56 @@ export default function AddCustomer() {
     return selected.length > 0 ? selected.join(",") : "Selected treatment will visible here"
   }
 
+ 
+
+  const fetchCustomerData = async () => {
+   try {
+     const token = getCookieValue("token");
+     const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/customers/${params.ucid}`, {
+       headers: { Authorization: `Bearer ${token}` }
+     });
+
+     const apiData = res.data;
+
+    // Convert treatment strings to boolean object
+    const labelToKey = {
+      "Termite Control": "termiteControl",
+      "General Disinfection": "generalDisinfection",
+      "Wood Borer": "woodBorer",
+      "Bed Bugs": "bedBugs",
+      "Rodent Control": "rodentControl",
+      "Bird Netting & Spikestrol": "birdNettingSpikestrol"
+    };
+
+    const treatmentObject = {
+      termiteControl: false,
+      generalDisinfection: false,
+      woodBorer: false,
+      bedBugs: false,
+      rodentControl: false,
+      birdNettingSpikestrol: false
+    };
+
+    if (Array.isArray(apiData.type_of_treatment)) {
+      apiData.type_of_treatment.forEach(label => {
+        const key = labelToKey[label];
+        if (key) treatmentObject[key] = true;
+      });
+    }
+
+    // Final formData
+    setFormData({
+      ...apiData,
+      type_of_treatment: treatmentObject
+    });
+   } catch (error) {
+     console.error('Error fetching customer data:', error);
+   }
+ };
+  useEffect(() => {
+    fetchCustomerData()
+  }, [])
+
   const handleSubmit = async (e) => {
   e.preventDefault();
 
@@ -99,18 +149,23 @@ export default function AddCustomer() {
       }
     })
     .filter(Boolean); // Remove nulls
+   const  formatedate = (date) => {
+        const formattedDate = date.split('T')[0]
+        return formattedDate;
+    }
 
   // Prepare final data
   const dataToSubmit = {
     ...formData,
     type_of_treatment: selectedTreatments, // ✅ array of strings
+    date_of_registration: formatedate(formData.date_of_registration),
+    end_date_of_contract: formatedate(formData.end_date_of_contract),
   };
 
   try {
-    debugger
     const token = getCookieValue("token");
-    const response = await axios.post(
-      `${process.env.NEXT_PUBLIC_API_URL}/api/customers`,
+    const response = await axios.put(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/customers/${params.ucid}`,
       dataToSubmit,
       {
         headers: {
@@ -121,29 +176,28 @@ export default function AddCustomer() {
     );
 
     if (response.status === 200 || response.status === 201) {
-      alert("✅ Customer data submitted successfully!");
-       // Reset the form
-  setFormData({
-    name: "",
-    contact_no: "",
-    date_of_registration: "",
-    contract_period: "",
-    end_date_of_contract: "",
-    email: "",
-    total_amount: "",
-    type_of_treatment: {
-      termiteControl: false,
-      generalDisinfection: false,
-      woodBorer: false,
-      bedBugs: false,
-      rodentControl: false,
-      birdNettingSpikestrol: false,
-    },
-    address: "",
-  });
+      alert("✅ Customer data updated successfully!");
 
-      // Redirect to the home page
-      router.push('/'); 
+            // Reset the form
+        setFormData({
+            name: "",
+            contact_no: "",
+            date_of_registration: "",
+            contract_period: "",
+            end_date_of_contract: "",
+            email: "",
+            total_amount: "",
+            type_of_treatment: {
+            termiteControl: false,
+            generalDisinfection: false,
+            woodBorer: false,
+            bedBugs: false,
+            rodentControl: false,
+            birdNettingSpikestrol: false,
+            },
+            address: "",
+        });
+        router.back();
       
     }
   } catch (error) {
@@ -189,7 +243,7 @@ export default function AddCustomer() {
             <input
               type="date"
               name="date_of_registration"
-              value={formData.date_of_registration}
+              value={formData.date_of_registration.split('T')[0]}
               onChange={handleInputChange}
               className={styles.dateInput}
             />
@@ -210,7 +264,7 @@ export default function AddCustomer() {
             <input
               type="date"
               name="end_date_of_contract"
-              value={formData.end_date_of_contract}
+              value={formData.end_date_of_contract.split('T')[0]}
               onChange={handleInputChange}
               className={styles.dateInput}
             />

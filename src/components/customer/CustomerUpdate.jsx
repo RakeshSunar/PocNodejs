@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import styles from "./customer.module.css";
 import axios from "axios";
 import { getCookieValue } from "../../../utils/getCookie";
+import { useRouter } from "next/navigation";
 
 const CustomerUpadateDetails = () => {
   const [searchForm, setSearchForm] = useState({
@@ -16,6 +17,7 @@ const CustomerUpadateDetails = () => {
  
   
   const [currentPage, setCurrentPage] = useState(1);
+  const router=useRouter();
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -44,20 +46,24 @@ const CustomerUpadateDetails = () => {
           },
         }
       );
-      console.log("response customersss", response.data);
       setCustomers(response.data);
     } catch (error) {
       console.error("Failed to fetch customers:", error);
     }
   };
 
-  const handleDelete = async (customerId) => {
+
+
+
+
+  const handleDelete =  (customerId) => {
     try {
-      await axios.delete(
+       const token = getCookieValue("token");
+       axios.delete(
         `${process.env.NEXT_PUBLIC_API_URL}/api/customers/${customerId}`,
         {
           headers: {
-            Authorization: `Bearer ${getCookieValue("token")}`,
+            Authorization: `Bearer ${token}`,
           },
         }
       );
@@ -138,6 +144,7 @@ const CustomerUpadateDetails = () => {
                   <td className={styles.td}>
                     <button
                       className={styles.transactionButton}
+                      onClick={() => router.push(`/updatecustomer/${customer.id}`)}
                     >
                       Update
                     </button>

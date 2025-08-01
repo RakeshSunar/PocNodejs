@@ -1,0 +1,467 @@
+// "use client"
+// import { use, useEffect, useState } from "react"
+// import styles from "../../../components/customer/addCustomer/addCustomer.module.css"
+// import axios from "axios"
+// import { getCookieValue } from "../../../../utils/getCookie"
+// import { useRouter } from "next/navigation"
+
+// export default function UpdateCustomerDetail(propsPromise) {
+//     const params  = use(propsPromise.params);
+//     const router =useRouter()
+//   const [formData, setFormData] = useState({
+//     name: "",
+//     contact_no: "",
+//     date_of_registration: "",
+//     contract_period: "",
+//     end_date_of_contract: "",
+//     email: "",
+//     total_amount: "",
+//     type_of_treatment: {
+//       termiteControl: false,
+//       generalDisinfection: false,
+//       woodBorer: false,
+//       bedBugs: false,
+//       rodentControl: false,
+//       birdNettingSpikestrol: false,
+//     },
+
+//     // selectedTreatments: [],
+//     address: "",
+//   })
+//   const handleInputChange = (e) => {
+//     const { name, value } = e.target
+//     setFormData((prev) => ({
+//       ...prev,
+//       [name]: value,
+//     }))
+//   }
+
+//   const handleCheckboxChange = (e) => {
+//     const { name, checked } = e.target
+//     setFormData((prev) => ({
+//       ...prev,
+//       type_of_treatment: {
+//         ...prev.type_of_treatment,
+//         [name]: checked,
+//       },
+//     }))
+//   }
+
+//   const getSelectedTreatments = () => {
+
+//     const selected = Object.entries(formData.type_of_treatment)
+//       .filter(([_, isSelected]) => isSelected)
+//       .map(([treatment, _]) => {
+//         switch (treatment) {
+//           case "termiteControl":
+//             return "Termite Control"
+//           case "generalDisinfection":
+//             return "General Disinfection"
+//           case "woodBorer":
+//             return "Wood Borer"
+//           case "bedBugs":
+//             return "Bed Bugs"
+//           case "rodentControl":
+//             return "Rodent Control"
+//           case "birdNettingSpikestrol":
+//             return "Bird Netting & Spikestrol"
+//           default:
+//             return ""
+//         }
+//       })
+
+//     return selected.length > 0 ? selected.join(",") : "Selected treatment will visible here"
+//   }
+
+
+//   const formatDate = (dateStr) => {
+//   if (!dateStr) return "";
+//   return new Date(dateStr).toISOString().split("T")[0]; // "2025-07-09"
+// };
+//   const handleSubmit = async (e) => {
+//   e.preventDefault();
+
+//   // Convert treatment object to array of selected treatment names
+//   const selectedTreatments = Object.entries(formData.type_of_treatment)
+//     .filter(([_, isSelected]) => isSelected)
+//     .map(([treatment]) => {
+//       switch (treatment) {
+//         case "termiteControl":
+//           return "Termite Control";
+//         case "generalDisinfection":
+//           return "General Disinfection";
+//         case "woodBorer":
+//           return "Wood Borer";
+//         case "bedBugs":
+//           return "Bed Bugs";
+//         case "rodentControl":
+//           return "Rodent Control";
+//         case "birdNettingSpikestrol":
+//           return "Bird Netting & Spikestrol";
+//         default:
+//           return null;
+//       }
+//     })
+//     .filter(Boolean); // Remove nulls
+
+//   // Prepare final data
+//   const dataToSubmit = {
+//     ...formData,
+//     type_of_treatment: selectedTreatments, // ✅ array of strings
+//      date_of_registration: formatDate(formData.date_of_registration),
+//     end_date_of_contract: formatDate(formData.end_date_of_contract),
+//   };
+
+//   try {
+//     const token = getCookieValue("token");
+//     const response = await axios.put(
+//       `${process.env.NEXT_PUBLIC_API_URL}/api/customers/${params.ctid}`,
+//       dataToSubmit,
+//       {
+//         headers: {
+//           Authorization: `Bearer ${token}`,
+//           "Content-Type": "application/json",
+//         },
+//       }
+//     );
+
+//     if (response.status === 200 || response.status === 201) {
+//       alert("✅ Customer data updated successfully!");
+//         router.back()
+//        // Reset the form
+//   setFormData({
+//     name: "",
+//     contact_no: "",
+//     date_of_registration: "",
+//     contract_period: "",
+//     end_date_of_contract: "",
+//     email: "",
+//     total_amount: "",
+//     type_of_treatment: {
+//       termiteControl: false,
+//       generalDisinfection: false,
+//       woodBorer: false,
+//       bedBugs: false,
+//       rodentControl: false,
+//       birdNettingSpikestrol: false,
+//     },
+//     address: "",
+//   });
+
+      
+//     }
+//   } catch (error) {
+//     console.error("❌ Submission failed:", error.response?.data || error);
+//   }
+// };
+
+//   const fetchData = async () => {
+//       try {
+//         const token = getCookieValue("token");
+//         const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/customers/${params.ctid}`, {
+//           headers: { Authorization: `Bearer ${token}` }
+//         });
+
+
+//        const apiData = res.data;
+
+//     // Convert treatment strings to boolean object
+//     const labelToKey = {
+//       "Termite Control": "termiteControl",
+//       "General Disinfection": "generalDisinfection",
+//       "Wood Borer": "woodBorer",
+//       "Bed Bugs": "bedBugs",
+//       "Rodent Control": "rodentControl",
+//       "Bird Netting & Spikestrol": "birdNettingSpikestrol"
+//     };
+
+//     const treatmentObject = {
+//       termiteControl: false,
+//       generalDisinfection: false,
+//       woodBorer: false,
+//       bedBugs: false,
+//       rodentControl: false,
+//       birdNettingSpikestrol: false
+//     };
+
+//     if (Array.isArray(apiData.type_of_treatment)) {
+//       apiData.type_of_treatment.forEach(label => {
+//         const key = labelToKey[label];
+//         if (key) treatmentObject[key] = true;
+//       });
+//     }
+
+//     // Final formData
+//     setFormData({
+//       ...apiData,
+//       type_of_treatment: treatmentObject
+//     });
+//       } catch (error) {
+//         console.error('Error fetching customer data:', error);
+//       }
+//     };
+
+//     useEffect(()=>{
+// fetchData()
+//     },[])
+  
+
+//   return (
+//     <div className={styles.container}>
+//       <form onSubmit={handleSubmit} className={styles.formGrid}>
+//         {/* Name and Contact Row */}
+//         <div className={`${styles.row} ${styles.rowTwo}`}>
+//           <div className={styles.fieldGroup}>
+//             <label className={styles.label}>Name</label>
+//             <input
+//               type="text"
+//               name="name"
+//               value={formData.name}
+//               onChange={handleInputChange}
+//               placeholder="Enter customer name"
+//               className={styles.input}
+//             />
+//           </div>
+//           <div className={styles.fieldGroup}>
+//             <label className={styles.label}>Contact no</label>
+//             <input
+//               type="tel"
+//               name="contact_no"
+//               value={formData.contact_no}
+//               onChange={handleInputChange}
+//               placeholder="+12-345 678 910"
+//               className={styles.input}
+//             />
+//           </div>
+//         </div>
+
+//         {/* Date, Contract Period, End Date Row */}
+//         <div className={`${styles.row} ${styles.rowThree}`}>
+//           <div className={styles.fieldGroup}>
+//             <label className={styles.label}>Date of Registration</label>
+//             <input
+//               type="date"
+//               name="date_of_registration"
+//               value={formData.date_of_registration.split('T')[0]}
+//               onChange={handleInputChange}
+//               className={styles.dateInput}
+//             />
+//           </div>
+//           <div className={styles.fieldGroup}>
+//             <label className={styles.label}>Contract Period</label>
+//             <input
+//               type="number"
+//               name="contract_period"
+//               value={formData.contract_period}
+//               onChange={handleInputChange}
+//               placeholder="No."
+//               className={styles.input}
+//             />
+//           </div>
+//           <div className={styles.fieldGroup}>
+//             <label className={styles.label}>End Date of Contract</label>
+//             <input
+//               type="date"
+//               name="end_date_of_contract"
+//               value={formData.end_date_of_contract.split('T')[0]}
+//               onChange={handleInputChange}
+//               className={styles.dateInput}
+//             />
+//           </div>
+//         </div>
+
+//         {/* Email and Total Amount Row */}
+//         <div className={`${styles.row} ${styles.rowTwo}`}>
+//           <div className={styles.fieldGroup}>
+//             <label className={styles.label}>Email</label>
+//             <input
+//               type="email"
+//               name="email"
+//               value={formData.email}
+//               onChange={handleInputChange}
+//               placeholder="abc@company.com"
+//               className={styles.input}
+//             />
+//           </div>
+//           <div className={styles.fieldGroup}>
+//             <label className={styles.label}>Total Amount</label>
+//             <input
+//               name="total_amount"
+//               value={formData.total_amount}
+//               onChange={handleInputChange}
+//               className={styles.select}
+//             />
+//           </div>
+//         </div>
+
+//         {/* Type of Treatment Section */}
+//         <div className={styles.treatmentSection}>
+//           <h3 className={styles.treatmentTitle}>Type of Treatment</h3>
+
+//           <div className={styles.selectedTreatment}>{getSelectedTreatments()}</div>
+
+//           <div className={styles.checkboxGrid}>
+//             <div className={styles.checkboxItem}>
+//               <input
+//                 type="checkbox"
+//                 id="termiteControl"
+//                 name="termiteControl"
+//                 checked={formData.type_of_treatment.termiteControl}
+//                 onChange={handleCheckboxChange}
+//                 className={styles.checkbox}
+//               />
+//               <label htmlFor="termiteControl" className={styles.checkboxLabel}>
+//                 Termite Control
+//               </label>
+//             </div>
+
+//             <div className={styles.checkboxItem}>
+//               <input
+//                 type="checkbox"
+//                 id="generalDisinfection"
+//                 name="generalDisinfection"
+//                 checked={formData.type_of_treatment.generalDisinfection}
+//                 onChange={handleCheckboxChange}
+//                 className={styles.checkbox}
+//               />
+//               <label htmlFor="generalDisinfection" className={styles.checkboxLabel}>
+//                 General Disinfection
+//               </label>
+//             </div>
+
+//             <div className={styles.checkboxItem}>
+//               <input
+//                 type="checkbox"
+//                 id="woodBorer"
+//                 name="woodBorer"
+//                 checked={formData.type_of_treatment.woodBorer}
+//                 onChange={handleCheckboxChange}
+//                 className={styles.checkbox}
+//               />
+//               <label htmlFor="woodBorer" className={styles.checkboxLabel}>
+//                 Wood Borer
+//               </label>
+//             </div>
+
+//             <div className={styles.checkboxItem}>
+//               <input
+//                 type="checkbox"
+//                 id="bedBugs"
+//                 name="bedBugs"
+//                 checked={formData.type_of_treatment.bedBugs}
+//                 onChange={handleCheckboxChange}
+//                 className={styles.checkbox}
+//               />
+//               <label htmlFor="bedBugs" className={styles.checkboxLabel}>
+//                 Bed Bugs
+//               </label>
+//             </div>
+
+//             <div className={styles.checkboxItem}>
+//               <input
+//                 type="checkbox"
+//                 id="rodentControl"
+//                 name="rodentControl"
+//                 checked={formData.type_of_treatment.rodentControl}
+//                 onChange={handleCheckboxChange}
+//                 className={styles.checkbox}
+//               />
+//               <label htmlFor="rodentControl" className={styles.checkboxLabel}>
+//                 Rodent Control
+//               </label>
+//             </div>
+
+//             <div className={styles.checkboxItem}>
+//               <input
+//                 type="checkbox"
+//                 id="birdNettingSpikestrol"
+//                 name="birdNettingSpikestrol"
+//                 checked={formData.type_of_treatment.birdNettingSpikestrol}
+//                 onChange={handleCheckboxChange}
+//                 className={styles.checkbox}
+//               />
+//               <label htmlFor="birdNettingSpikestrol" className={styles.checkboxLabel}>
+//                 Bird Netting & Spikestrol
+//               </label>
+//             </div>
+//           </div>
+//         </div>
+
+//         {/* Location Section */}
+//         <div className={styles.locationSection}>
+//           <h3 className={styles.locationTitle}>Location</h3>
+
+//           <div className={styles.addressField}>
+//             <label className={styles.label}>Address</label>
+//             <textarea
+//               name="address"
+//               value={formData.address}
+//               onChange={handleInputChange}
+//               placeholder="Enter your home address"
+//               className={styles.textArea}
+//               rows={3}
+//             />
+//           </div>
+//         </div>
+
+//         {/* Save Button */}
+//         <button type="submit" className={styles.saveButton}>
+//           Save all
+//         </button>
+//       </form>
+//     </div>
+//   )
+// }
+
+
+"use client";
+import CustomerDetailsView from '@/components/customer/customerDetailView'
+import React, { useEffect, useState, use } from 'react'
+import axios from 'axios';
+import { getCookieValue } from '../../../../utils/getCookie';
+
+ function page(propsPromise) {
+  const params  = use(propsPromise.params);
+    const [customerData, setCustomerData] = useState([]);
+  const [transactions, setTransactions] = useState([]);
+    useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const token = getCookieValue("token");
+        const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/customers/${params.ctid}`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+
+        setCustomerData(res.data); // adjust based on response 
+      } catch (error) {
+        console.error('Error fetching customer data:', error);
+      }
+    };
+
+      const fetchTransactionData = async () => {
+      try {
+        const token = getCookieValue("token");
+        const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/transactions/${params.ctid}`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+
+        setTransactions(res.data); // adjust based on response // adjust based on response
+      } catch (error) {
+        console.error('Error fetching customer data:', error);
+      }
+    };
+
+
+
+fetchTransactionData()
+
+    fetchData();
+  }, []);
+  return (
+    <>
+    {customerData && <CustomerDetailsView customerData={customerData} customerId={params.ctid} transactions={transactions}/>}
+    </>
+  )
+}
+
+export default page

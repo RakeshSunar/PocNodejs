@@ -22,20 +22,35 @@ import axios from 'axios';
           headers: { Authorization: `Bearer ${token}` }
         });
 
-        // console.log("res",res.data)
-
-        setCustomerData(res.data); // adjust based on response // adjust based on response
+        setCustomerData(res.data); // adjust based on response 
       } catch (error) {
         console.error('Error fetching customer data:', error);
       }
     };
+
+      const fetchTransactionData = async () => {
+      try {
+        const token = getCookieValue("token");
+        const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/transactions/${params.cid}`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+
+        setTransactions(res.data); // adjust based on response // adjust based on response
+      } catch (error) {
+        console.error('Error fetching customer data:', error);
+      }
+    };
+
+
+
+fetchTransactionData()
 
     fetchData();
   }, []);
   // console.log(customerData,"customerData from page")
   return (
     <>
-    {customerData && <CustomerDetailsView customerData={customerData}/>}
+    {customerData && <CustomerDetailsView customerData={customerData} customerId={params.cid} transactions={transactions}/>}
     </>
   )
 }

@@ -1,41 +1,42 @@
 // components/CustomerManagement.js
 'use client';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import styles from '../customer/customer.module.css';
 import Header from '../header/Header';
+import { getCookieValue } from '../../../utils/getCookie';
+import axios from 'axios';
 
 const EmployeeUpadateDetails = () => {
+  const router = useRouter();
   const [searchForm, setSearchForm] = useState({
     customerName: '',
     customerContactNo: ''
   });
 
-  const [customers] = useState([
-    {
-      id: 3,
-      name: 'rishi',
-      contactNo: '9619438148',
-      date: '06/06/0170',
-      totalAmount: 10000,
-      Installment: 'Add Transaction'
-    },
-    {
-      id: 2,
-      name: 'Vishwajit Rajkumar Rajbhar',
-      contactNo: '9619438148',
-      date: '2022-05-25',
-      totalAmount: 10000,
-      Installment: 'Add Transaction'
-    },
-    {
-      id: 1,
-      name: 'Vishwajit Rajkumar Rajbhar',
-      contactNo: '8779546242',
-      date: '2022-05-27',
-      totalAmount: 10000,
-      Installment: 'add Transaction'
+const [employees, setEmployees] = useState([]) 
+ const fetchEmployees = async () => {
+  // const cookieStore = await cookies();
+      try {
+        // debugger
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/employees`,{
+          headers: {
+            Authorization: `Bearer ${getCookieValue('token')}`,
+          },
+        })
+        console.log("response employees", response.data)
+        setEmployees(response.data)
+      } catch (error) {
+        console.error("Failed to fetch customers:", error)
+      }
     }
-  ]);
+  useEffect(() => {
+    
+
+    fetchEmployees()
+  }, [])
+
+
 
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -52,9 +53,20 @@ const EmployeeUpadateDetails = () => {
     // Add your search logic here
   };
 
-  const handleAddTransaction = (customerId) => {
-    console.log('Add transaction for customer:', customerId);
-    // Add your transaction logic here
+  const handleAddTransaction = (employeeId) => {
+    router.push(`/updateemployee/${employeeId}`);
+  };
+
+  const handleCheckRecords = (employeeId) => {
+    router.push(`/employeeprofileview/${employeeId}`);
+  };
+
+  // Helper to format date as YYYY-MM-DD
+  const formatDate = (dateStr) => {
+    if (!dateStr) return "";
+    const d = new Date(dateStr);
+    if (isNaN(d)) return "";
+    return d.toISOString().slice(0, 10);
   };
 
   return (
@@ -107,24 +119,33 @@ const EmployeeUpadateDetails = () => {
                 <th className={styles.th}>Employee Name</th>
                 <th className={styles.th}>Contact no</th>
                 <th className={styles.th}>Date</th>
-                <th className={styles.th}>Total Amount</th>
-                <th className={styles.th}>Installment</th>
+                <th className={styles.th}>Total Salary Amount</th>
+                <th className={styles.th}>Edit Details</th>
+                <th className={styles.th}>Records</th>
               </tr>
             </thead>
             <tbody>
-              {customers.map((customer) => (
+              {employees.map((customer) => (
                 <tr key={customer.id} className={styles.tableRow}>
                   <td className={styles.td}>{customer.id}</td>
-                  <td className={styles.td}>{customer.name}</td>
-                  <td className={styles.td}>{customer.contactNo}</td>
-                  <td className={styles.td}>{customer.date}</td>
-                  <td className={styles.td}>{customer.totalAmount}</td>
+                  <td className={styles.td}>{customer.employee_name}</td>
+                  <td className={styles.td}>{customer.contact_no}</td>
+                  <td className={styles.td}>{formatDate(customer.date_of_joining)}</td>
+                  <td className={styles.td}>{customer.salary}</td>
                   <td className={styles.td}>
                     <button
                       onClick={() => handleAddTransaction(customer.id)}
                       className={styles.transactionButton}
                     >
-                       + Add Transaction
+                       Update
+                    </button>
+                  </td>
+                  <td className={styles.td}>
+                    <button
+                      onClick={() => handleCheckRecords(customer.id)}
+                      className={styles.transactionButton}
+                    >
+                       Check Records
                     </button>
                   </td>
                 </tr>

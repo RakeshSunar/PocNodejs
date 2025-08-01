@@ -1,7 +1,10 @@
 // components/CustomerManagement.js
 'use client';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styles from './customer.module.css';
+import { getCookieValue } from '../../../utils/getCookie';
+import axios from 'axios';
+import Link from 'next/link';
 
 const CustomerServiceRecords = () => {
   const [searchForm, setSearchForm] = useState({
@@ -9,32 +12,49 @@ const CustomerServiceRecords = () => {
     customerContactNo: ''
   });
 
-  const [customers] = useState([
-    {
-      id: 3,
-      name: 'rishi',
-      contactNo: '9619438148',
-      date: '06/06/0170',
-      totalAmount: 10000,
-      Installment: 'Add Transaction'
-    },
-    {
-      id: 2,
-      name: 'Vishwajit Rajkumar Rajbhar',
-      contactNo: '9619438148',
-      date: '2022-05-25',
-      totalAmount: 10000,
-      Installment: 'Add Transaction'
-    },
-    {
-      id: 1,
-      name: 'Vishwajit Rajkumar Rajbhar',
-      contactNo: '8779546242',
-      date: '2022-05-27',
-      totalAmount: 10000,
-      Installment: 'add Transaction'
+  // const [customers] = useState([
+  //   {
+  //     id: 3,
+  //     name: 'rishi',
+  //     contactNo: '9619438148',
+  //     date: '06/06/0170',
+  //     totalAmount: 10000,
+  //     Installment: 'Add Transaction'
+  //   },
+  //   {
+  //     id: 2,
+  //     name: 'Vishwajit Rajkumar Rajbhar',
+  //     contactNo: '9619438148',
+  //     date: '2022-05-25',
+  //     totalAmount: 10000,
+  //     Installment: 'Add Transaction'
+  //   },
+  //   {
+  //     id: 1,
+  //     name: 'Vishwajit Rajkumar Rajbhar',
+  //     contactNo: '8779546242',
+  //     date: '2022-05-27',
+  //     totalAmount: 10000,
+  //     Installment: 'add Transaction'
+  //   }
+  // ]);
+
+   const [customerData,setCustomerData] = useState([]);
+
+    const fetchCustomerData = async () => {
+    try {
+      const token = getCookieValue("token");
+      const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/customers`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setCustomerData(res.data);
+    } catch (error) {
+      console.error('Error fetching customer data:', error);
     }
-  ]);
+  }
+  useEffect(() => {
+    fetchCustomerData();
+  }, []);
 
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -45,6 +65,7 @@ const CustomerServiceRecords = () => {
       [name]: value
     }));
   };
+
 
   const handleSearch = () => {
     console.log('Search criteria:', searchForm);
@@ -111,20 +132,20 @@ const CustomerServiceRecords = () => {
               </tr>
             </thead>
             <tbody>
-              {customers.map((customer) => (
+              {customerData.map((customer) => (
                 <tr key={customer.id} className={styles.tableRow}>
                   <td className={styles.td}>{customer.id}</td>
                   <td className={styles.td}>{customer.name}</td>
-                  <td className={styles.td}>{customer.contactNo}</td>
-                  <td className={styles.td}>{customer.date}</td>
-                  <td className={styles.td}>{customer.totalAmount}</td>
+                  <td className={styles.td}>{customer.contact_no}</td>
+                  <td className={styles.td}>{customer.date_of_registration}</td>
+                  <td className={styles.td}>{customer.total_amount}</td>
                   <td className={styles.td}>
-                    <button
-                      onClick={() => handleAddTransaction(customer.id)}
+                    <Link
+                    href={`/customerservicerecordview/${customer.id}`}
                       className={styles.transactionButton}
                     >
                      + Add Service
-                    </button>
+                    </Link>
                   </td>
                  
                 </tr>

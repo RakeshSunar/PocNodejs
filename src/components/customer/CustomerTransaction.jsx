@@ -1,7 +1,10 @@
 // components/CustomerManagement.js
 'use client';
-import { useState } from 'react';
+import {useState, useEffect}  from 'react';
 import styles from './customer.module.css';
+import axios from 'axios';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 
 const CustomerTransaction = () => {
   const [searchForm, setSearchForm] = useState({
@@ -9,52 +12,58 @@ const CustomerTransaction = () => {
     customerContactNo: ''
   });
 
-  const [customers] = useState([
-    {
-      id: 3,
-      name: 'rishi',
-      contactNo: '9619438148',
-      date: '06/06/0170',
-      totalAmount: 10000,
-      installment: 'Add Transaction'
-    },
-    {
-      id: 2,
-      name: 'Vishwajit Rajkumar Rajbhar',
-      contactNo: '9619438148',
-      date: '2022-05-25',
-      totalAmount: 10000,
-      installment: 'Add Transaction'
-    },
-    {
-      id: 1,
-      name: 'Vishwajit Rajkumar Rajbhar',
-      contactNo: '8779546242',
-      date: '2022-05-27',
-      totalAmount: 10000,
-      installment: 'Add Transaction'
-    }
-  ]);
 
   const [currentPage, setCurrentPage] = useState(1);
+   const [customers, setCustomers] = useState([])
+  function getCookieValue(name) {
+  const cookieString = document.cookie;
+  const cookies = cookieString.split('; ');
+  for (let cookie of cookies) {
+    const [key, value] = cookie.split('=');
+    if (key === name) return value;
+  }
+  return null;
+}
+ 
+const fetchCustomers = async () => {
+  // const cookieStore = await cookies();
+      try {
+        // debugger
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/customers`,{
+          headers: {
+            Authorization: `Bearer ${getCookieValue('token')}`,
+          },
+        })
+        setCustomers(response.data)
+      } catch (error) {
+        console.error("Failed to fetch customers:", error)
+      }
+    }
+  useEffect(() => {
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setSearchForm(prev => ({
-      ...prev,
-      [name]: value
-    }));
-  };
+    fetchCustomers()
+  }, [])
+
+
+  // const handleInputChange = (e) => {
+  //   const { name, value } = e.target;
+  //   setSearchForm(prev => ({
+  //     ...prev,
+  //     [name]: value
+  //   }));
+  // };
 
   const handleSearch = () => {
     console.log('Search criteria:', searchForm);
     // Add your search logic here
   };
 
-  const handleAddTransaction = (customerId) => {
-    console.log('Add transaction for customer:', customerId);
-    // Add your transaction logic here
-  };
+  // const handleAddTransaction = (customerId) => {
+  //   console.log('Add transaction for customer:', customerId);
+  //   const route = useRouter()
+  //   route.push(`'/customertransactionview/${customerId}'`)
+  //   // Add your transaction logic here
+  // };
 
   return (
     <div className={styles.container}>
@@ -69,8 +78,8 @@ const CustomerTransaction = () => {
               type="text"
               id="customerName"
               name="customerName"
-              value={searchForm.customerName}
-              onChange={handleInputChange}
+              // value={searchForm.customerName}
+              // onChange={handleInputChange}
               className={styles.input}
             />
           </div>
@@ -83,8 +92,8 @@ const CustomerTransaction = () => {
               type="text"
               id="customerContactNo"
               name="customerContactNo"
-              value={searchForm.customerContactNo}
-              onChange={handleInputChange}
+              // value={searchForm.customerContactNo}
+              // onChange={handleInputChange}
               className={styles.input}
             />
           </div>
@@ -114,16 +123,18 @@ const CustomerTransaction = () => {
                 <tr key={customer.id} className={styles.tableRow}>
                   <td className={styles.td}>{customer.id}</td>
                   <td className={styles.td}>{customer.name}</td>
-                  <td className={styles.td}>{customer.contactNo}</td>
-                  <td className={styles.td}>{customer.date}</td>
-                  <td className={styles.td}>{customer.totalAmount}</td>
+                  <td className={styles.td}>{customer.contact_no}</td>
+                  <td className={styles.td}>{customer.date_of_registration}</td>
+                  <td className={styles.td}>{customer.total_amount}</td>
                   <td className={styles.td}>
-                    <button
-                      onClick={() => handleAddTransaction(customer.id)}
+                    <Link
+                      // onClick={() => handleAddTransaction(customer.id)}
+                      href={`/customertransactionview/${customer.id}`}
                       className={styles.transactionButton}
+
                     >
                       + Add Transaction
-                    </button>
+                    </Link>
                   </td>
                 </tr>
               ))}
@@ -131,7 +142,6 @@ const CustomerTransaction = () => {
           </table>
         </div>
 
-        {/* Pagination */}
         <div className={styles.pagination}>
           <button
             className={`${styles.pageButton} ${currentPage === 1 ? styles.active : ''}`}

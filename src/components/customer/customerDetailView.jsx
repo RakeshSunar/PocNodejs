@@ -176,7 +176,7 @@ export default  function CustomerDetailsView({customerData,customerId,transactio
 
         <br />
         <center>
-          <Link href="#" className={styles.btn_primary}>
+          <Link href={`/addcustomertransaction/${customerId}`} className={styles.btn_primary}>
             Add New Record
           </Link>
         </center>

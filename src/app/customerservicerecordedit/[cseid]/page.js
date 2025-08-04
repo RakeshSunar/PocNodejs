@@ -9,9 +9,9 @@ import { useRouter } from "next/navigation";
 function page (propsPromise){
     const params  = use(propsPromise.params);
 const str = params.cseid.toString();
-const customerID = parseInt(str.slice(0, 2)); // 17
-const serviceID = parseInt(str.slice(2));
-
+const customerID = parseInt(str.split("-")[0]); // 17
+const serviceID = parseInt(str.split("-")[1]);
+// console.log(str)
         const [customerData, setCustomerData] = useState({
             name: "",
             contact_no: "",
@@ -61,6 +61,14 @@ const serviceID = parseInt(str.slice(2));
         });
 
         console.log("services--- id",res.data)
+        setServices(
+                { operator_id: "",
+                  other_operator_name: "",  
+                  purpose: "",  
+                  classification: "",  
+                  date_of_service: "",  
+                  next_service_date: "",
+                })
 
         setServices(res.data); // adjust based on response // adjust based on response
       } catch (error) {
@@ -72,6 +80,10 @@ const serviceID = parseInt(str.slice(2));
     fetchEmployeeData();
     fetchServiceData()
   }, []);
+
+      useEffect(()=>{
+        console.log(services,"servicesservices")
+      },[services])
 
     const router = useRouter();
 
@@ -96,6 +108,7 @@ const serviceID = parseInt(str.slice(2));
     const handlesubmit = async (e) =>{
         e.preventDefault();
         try{
+          // debugger
             const token =getCookieValue("token")
 
             // ✅ If date is empty, set it to today's date in YYYY-MM-DD format
@@ -121,14 +134,7 @@ const serviceID = parseInt(str.slice(2));
                 router.back(); // ✅ Go to previous page
             }
             // Reset the form data after submission
-            setServices(
-                { operator_id: "",
-                  other_operator_name: "",  
-                  purpose: "",  
-                  classification: "",  
-                  date_of_service: "",  
-                  next_service_date: "",
-                })
+            
 
         }catch (error){
 
@@ -177,7 +183,7 @@ const serviceID = parseInt(str.slice(2));
                 </select>
 
                 
-                {services[0].operator_id === "-1" && (
+                {services[0].operator_id === -1 && (
                     <div className={styles.input_container}>
                         <label htmlFor="OperatorName">Other Operator name</label>
                         <input

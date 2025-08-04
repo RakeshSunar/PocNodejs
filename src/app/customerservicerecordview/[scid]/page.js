@@ -191,7 +191,7 @@ import  Link  from 'next/link';
                   <td>{service.classification === "" ? "NA" : service.classification}</td>
                   <td>{service.next_service_date.split('T')[0]}</td>
                   <td>
-                    <Link href={`/customerservicerecordedit/${params.scid}${service.id}`} >
+                    <Link href={`/customerservicerecordedit/${params.scid}-${service.id}`} >
                       <span >Edit</span>
                     </Link>
                     <button onClick={()=>handleDelete(service.id)} >Delete</button>

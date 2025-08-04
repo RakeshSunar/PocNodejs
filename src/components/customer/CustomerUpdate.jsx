@@ -59,7 +59,7 @@ const CustomerUpadateDetails = () => {
   const handleDelete =  (customerId) => {
     try {
        const token = getCookieValue("token");
-       axios.delete(
+             axios.delete(
         `${process.env.NEXT_PUBLIC_API_URL}/api/customers/${customerId}`,
         {
           headers: {

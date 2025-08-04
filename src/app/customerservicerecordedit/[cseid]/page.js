@@ -75,13 +75,23 @@ const serviceID = parseInt(str.slice(2));
 
     const router = useRouter();
 
-      const handleInputChange = (e) => {
-        const { name, value } = e.target
-        setServices((prev) => ({
-        ...prev,
-        [name]: value,
-        }))
-  }
+  //     const handleInputChange = (e) => {
+  //       const { name, value } = e.target
+  //       setServices((prev) => ({
+  //       ...prev,
+  //       [name]: value,
+  //       }))
+  // }
+
+  const handleInputChange = (e) => {
+  const { name, value } = e.target;
+  setServices(prev => {
+    const updated = [...prev];
+    updated[0] = { ...updated[0], [name]: value };
+    return updated;
+  });
+};
+
 
     const handlesubmit = async (e) =>{
         e.preventDefault();
@@ -93,13 +103,13 @@ const serviceID = parseInt(str.slice(2));
             const formattedToday = today.toISOString().split("T")[0]; // "YYYY-MM-DD"
             const formattedData = {
             customer_id:customerData.id,
-            operator_id:services.operator_id === "other"? -1: Number(services.operator_id),
-            other_operator_name: services.other_operator_name? services.other_operator_name : 'NA',
-            purpose: services.purpose,
-            classification: services.classification,
-            // date_of_service: services.date_of_service,
-            date_of_service: services.date_of_service || formattedToday,
-            next_service_date: services.next_service_date || formattedToday,
+            operator_id:services[0].operator_id === "other"? -1: Number(services[0].operator_id),
+            other_operator_name: services[0].other_operator_name? services[0].other_operator_name : 'NA',
+            purpose: services[0].purpose,
+            classification: services[0].classification,
+            // date_of_service: services[0].date_of_service,
+            date_of_service: services[0].date_of_service.split("T")[0] || formattedToday,
+            next_service_date: services[0].next_service_date.split("T")[0] || formattedToday,
             };
             
             const res = await axios.put(`${process.env.NEXT_PUBLIC_API_URL}/api/services/${serviceID}`,formattedData,
@@ -128,7 +138,7 @@ const serviceID = parseInt(str.slice(2));
 
     }
 
-    console.log("services data checklist---",services[0].operator_name)
+    // console.log("services data checklist---",services[0].operator_name)
     return (
    
         <div className={styles.AddCustomerTransactionWrapper}>
@@ -157,7 +167,7 @@ const serviceID = parseInt(str.slice(2));
                   />
                 </div>
 
-                <select id="operator_id"  name='operator_id' value={services.operator_id} className={styles.form_control} onChange={handleInputChange}> 
+                <select id="operator_id"  name='operator_id' value={services[0].operator_id} className={styles.form_control} onChange={handleInputChange}> 
                     <option value="" disabled>-- Select Operator Name --</option>
 
                     {employees.map((item) => (<option key={item.id} value={item.id}>{item.employee_name}</option>))}
@@ -167,7 +177,7 @@ const serviceID = parseInt(str.slice(2));
                 </select>
 
                 
-                {services.operator_id === "-1" && (
+                {services[0].operator_id === "-1" && (
                     <div className={styles.input_container}>
                         <label htmlFor="OperatorName">Other Operator name</label>
                         <input
@@ -181,7 +191,7 @@ const serviceID = parseInt(str.slice(2));
                     </div>
                 )}
 
-                <select id="purpose"  name='purpose' value={services.purpose} className={styles.form_control} onChange={handleInputChange}> 
+                <select id="purpose"  name='purpose' value={services[0].purpose} className={styles.form_control} onChange={handleInputChange}> 
                     <option value="" disabled>-- Select Purpose of Service --</option>
                     <option>Other</option>
                     <option>First Service</option>
@@ -193,7 +203,7 @@ const serviceID = parseInt(str.slice(2));
 
                 </select>
 
-                {["Other", "First Service"].includes(services.purpose) && (
+                {["Other", "First Service"].includes(services[0].purpose) && (
                     <>
                         <div className={styles.input_container}>
                         <label htmlFor="classification">Classification</label>
@@ -213,7 +223,7 @@ const serviceID = parseInt(str.slice(2));
                             id="next_service_date"
                             name="next_service_date"
                             type="date"
-                            value={services.next_service_date}
+                            value={services[0].next_service_date.split("T")[0] || ''}
                             onChange={handleInputChange}
                         />
                         </div>

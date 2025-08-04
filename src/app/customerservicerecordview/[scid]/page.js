@@ -49,7 +49,7 @@ import  Link  from 'next/link';
             headers: { Authorization: `Bearer ${token}` }
             });
 
-            console.log("services",res.data)
+            console.log("customerservicerecordview page services-- ",res.data)
 
             setService(res.data); // adjust based on response // adjust based on response
         } catch (error) {
@@ -188,10 +188,10 @@ import  Link  from 'next/link';
                   <td>{service.operator_name === "External Operator" ? "-" :  service.operator_name}</td>
                   <td>{service.other_operator_name || ''}</td>
                   <td>{service.purpose}</td>
-                  <td>{service.classification}</td>
+                  <td>{service.classification === "" ? "NA" : service.classification}</td>
                   <td>{service.next_service_date.split('T')[0]}</td>
                   <td>
-                    <Link href={`/customerservicerecordedit/${params.scid}`} >
+                    <Link href={`/customerservicerecordedit/${params.scid}${service.id}`} >
                       <span >Edit</span>
                     </Link>
                     <button onClick={()=>handleDelete(service.id)} >Delete</button>

@@ -8,6 +8,10 @@ import { useRouter } from "next/navigation";
 
 function page (propsPromise){
     const params  = use(propsPromise.params);
+const str = params.cseid.toString();
+const customerID = parseInt(str.slice(0, 2)); // 17
+const serviceID = parseInt(str.slice(2));
+
         const [customerData, setCustomerData] = useState({
             name: "",
             contact_no: "",
@@ -26,11 +30,9 @@ function page (propsPromise){
     const fetchData = async () => {
       try {
         const token = getCookieValue("token");
-        const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/customers/${params.cseid}`, {
+        const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/customers/${customerID}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
-
-        console.log("customerData",res.data)
 
         setCustomerData(res.data); // adjust based on response // adjust based on response
       } catch (error) {
@@ -54,7 +56,7 @@ function page (propsPromise){
     const fetchServiceData = async () => {
       try {
         const token = getCookieValue("token");
-        const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/services/getServices/19`, {
+        const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/services/getServices/${serviceID}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
 
@@ -71,20 +73,11 @@ function page (propsPromise){
     fetchServiceData()
   }, []);
 
-      const [TransactionData,setTransactionData] =useState({
-        operator_id: "",
-        other_operator_name: "",
-        purpose:"",
-        classification: "",
-        date_of_service:"",
-        next_service_date: "",
-    })
-
     const router = useRouter();
 
       const handleInputChange = (e) => {
         const { name, value } = e.target
-        setTransactionData((prev) => ({
+        setServices((prev) => ({
         ...prev,
         [name]: value,
         }))
@@ -100,16 +93,16 @@ function page (propsPromise){
             const formattedToday = today.toISOString().split("T")[0]; // "YYYY-MM-DD"
             const formattedData = {
             customer_id:customerData.id,
-            operator_id:TransactionData.operator_id === "other"? -1: Number(TransactionData.operator_id),
-            other_operator_name: TransactionData.other_operator_name? TransactionData.other_operator_name : 'NA',
-            purpose: TransactionData.purpose,
-            classification: TransactionData.classification,
-            // date_of_service: TransactionData.date_of_service,
-            date_of_service: TransactionData.date_of_service || formattedToday,
-            next_service_date: TransactionData.next_service_date || formattedToday,
+            operator_id:services.operator_id === "other"? -1: Number(services.operator_id),
+            other_operator_name: services.other_operator_name? services.other_operator_name : 'NA',
+            purpose: services.purpose,
+            classification: services.classification,
+            // date_of_service: services.date_of_service,
+            date_of_service: services.date_of_service || formattedToday,
+            next_service_date: services.next_service_date || formattedToday,
             };
             
-            const res = await axios.put(`${process.env.NEXT_PUBLIC_API_URL}/api/services/${services[0].id}`,formattedData,
+            const res = await axios.put(`${process.env.NEXT_PUBLIC_API_URL}/api/services/${serviceID}`,formattedData,
                 {headers:{Authorization:`Bearer ${token}`,
             }})
 
@@ -117,9 +110,8 @@ function page (propsPromise){
                 alert("✅ Customer data submitted successfully!");
                 router.back(); // ✅ Go to previous page
             }
-
-             console.log("TransactionData ==>",TransactionData)
-            setTransactionData(
+            // Reset the form data after submission
+            setServices(
                 { operator_id: "",
                   other_operator_name: "",  
                   purpose: "",  
@@ -136,7 +128,7 @@ function page (propsPromise){
 
     }
 
-    console.log("services data checklist",services)
+    console.log("services data checklist---",services[0].operator_name)
     return (
    
         <div className={styles.AddCustomerTransactionWrapper}>
@@ -165,7 +157,7 @@ function page (propsPromise){
                   />
                 </div>
 
-                <select id="operator_id"  name='operator_id' value={services.operator_name} className={styles.form_control} onChange={handleInputChange}> 
+                <select id="operator_id"  name='operator_id' value={services.operator_id} className={styles.form_control} onChange={handleInputChange}> 
                     <option value="" disabled>-- Select Operator Name --</option>
 
                     {employees.map((item) => (<option key={item.id} value={item.id}>{item.employee_name}</option>))}
@@ -183,7 +175,7 @@ function page (propsPromise){
                         id="other_operator_name"
                         name="other_operator_name"
                         type="text"
-                        value={services.other_operator_name}
+                        value={services[0].other_operator_name}
                         onChange={handleInputChange}
                         />
                     </div>
@@ -210,7 +202,7 @@ function page (propsPromise){
                             id="classification"
                             name="classification"
                             type="text"
-                            value={services.classification}
+                            value={services[0].classification === "" ? "NA" : services[0].classification}
                             onChange={handleInputChange}
                         />
                         </div>

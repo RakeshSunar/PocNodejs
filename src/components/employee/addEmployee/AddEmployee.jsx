@@ -27,7 +27,6 @@ export default function AddEmployee() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-debugger
      try {
     const token = getCookieValue("token");
       console.log("token", token);

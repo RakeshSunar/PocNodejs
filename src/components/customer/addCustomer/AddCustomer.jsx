@@ -107,7 +107,6 @@ export default function AddCustomer() {
   };
 
   try {
-    debugger
     const token = getCookieValue("token");
     const response = await axios.post(
       `${process.env.NEXT_PUBLIC_API_URL}/api/customers`,

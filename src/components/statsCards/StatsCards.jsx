@@ -1,6 +1,25 @@
+"use client"
 import React from 'react'
 
-function StatsCards() {
+function StatsCards({customers}) {
+  console.log("totol customers ---?", customers)
+  const totalCustomers = customers.length || 0;
+  // const monthlyTurnover = customers.reduce((acc, customer) => acc + parseFloat(customer.total_amount || 0), 0);
+
+  const currentDate = new Date();
+const currentMonth = currentDate.getMonth(); // 0-indexed (0 = Jan)
+const currentYear = currentDate.getFullYear();
+
+const monthlyTurnover = customers.reduce((acc, customer) => {
+  const regDate = new Date(customer.date_of_registration);
+  const regMonth = regDate.getMonth();
+  const regYear = regDate.getFullYear();
+
+  if (regMonth === currentMonth && regYear === currentYear) {
+    return acc + parseFloat(customer.total_amount || 0);
+  }
+  return acc;
+}, 0);
   return (
     <>
       {/* Stats Cards */}
@@ -28,7 +47,7 @@ function StatsCards() {
                   </div>
                   <div className="stat-info">
                     <span className="stat-label">Total Customers</span>
-                    <span className="stat-value">3</span>
+                    <span className="stat-value">{totalCustomers}</span>
                     <div className="stat-trend">
                       <span className="stat-trend-label">Since last month</span>
                       <svg
@@ -61,7 +80,7 @@ function StatsCards() {
                   </div>
                   <div className="stat-info">
                     <span className="stat-label">Monthly Turnover</span>
-                    <span className="stat-value">0</span>
+                    <span className="stat-value">{monthlyTurnover}</span>
                     <div className="stat-trend">
                       <span className="stat-trend-label">Since last month</span>
                       <svg

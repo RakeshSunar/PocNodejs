@@ -1,6 +1,6 @@
 import React from 'react'
 
-function Progress() {
+function Progress({ customers  }) {
   return (
     <div className="progress-section">
               <div className="card">

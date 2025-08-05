@@ -50,10 +50,10 @@ const fetchCustomers = async () => {
       <div className="main-content">
         <Header />
         <main className="dashboard">
-          <StatsCards />
+          <StatsCards customers={customers} />
           <div className="dashboard-grid">
             <RecentCustomer customers={customers} />
-            <Progress />
+            <Progress  customers={customers}/>
           </div>
         </main>
       </div>

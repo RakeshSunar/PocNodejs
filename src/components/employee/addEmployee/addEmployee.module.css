@@ -251,7 +251,7 @@
 
 .tabs {
   display: flex;
-  gap: 12px;
+  gap: 8px;
   margin-bottom: 20px;
 }
 
@@ -261,12 +261,14 @@
   border: 1px solid #ccc;
   cursor: pointer;
   border-radius: 4px;
+  width: 33.33%;
 }
 
 .activeTab {
-  background-color: #007bff;
+  background-color: #1F2937;
   color: white;
-  border-color: #007bff;
+  border-color: #1F2937;
+  width: 33.33%;
 }
 
 .tabContent {

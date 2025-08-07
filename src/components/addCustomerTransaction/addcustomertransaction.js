@@ -11,7 +11,8 @@ function AddCustomerTransaction({customerData}) {
   const [transactionsData, setTransactionData] = React.useState({
     TransactionAmount: 0,
     Purpose: "",
-    NextInstallmentDate: "",    
+    PaymentDate: "",
+    NextInstallmentDate: "",
   });
 
   const handleInputChange = (e) => {
@@ -30,10 +31,17 @@ function AddCustomerTransaction({customerData}) {
         // ✅ If date is empty, set it to today's date in YYYY-MM-DD format
             const today = new Date();
             const formattedToday = today.toISOString().split("T")[0]; // "YYYY-MM-DD"
+            // Function to add months
+            const addMonths = (date, months) => {
+              const d = new Date(date);
+              d.setMonth(d.getMonth() + months);
+              return d.toISOString().split("T")[0];
+            };
             const formattedData = {
             TransactionAmount: Number(transactionsData.TransactionAmount),
             Purpose: transactionsData.Purpose,
-            NextInstallmentDate: transactionsData.NextInstallmentDate ? transactionsData.NextInstallmentDate.split("T")[0] : formattedToday,
+            PaymentDate:transactionsData.PaymentDate ? transactionsData.PaymentDate.split("T")[0] : formattedToday,
+            NextInstallmentDate: transactionsData.NextInstallmentDate ? transactionsData.NextInstallmentDate.split("T")[0] : addMonths(formattedToday, 3),
             };
             const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/transactions/${customerData.id}`, formattedData,
                 {headers:{Authorization:`Bearer ${token}`,
@@ -46,9 +54,7 @@ function AddCustomerTransaction({customerData}) {
                 alert("✅ Customer data updated successfully!");
                 router.back(); // ✅ Go to previous page
             }
-            setTransactionData({TransactionAmount:"",Purpose:"",NextInstallmentDate:""})
-        console.log("first11",response.data)
-
+            setTransactionData({TransactionAmount:"",Purpose:"",PaymentDate:"",NextInstallmentDate:""})
     }catch (error){
 
         console.error("❌ Submission failed:", error.response?.data || error);
@@ -95,6 +101,17 @@ function AddCustomerTransaction({customerData}) {
                     onChange={handleInputChange}
                   />
                 </div>
+                 <div className={styles.input_container}>
+                        <label htmlFor="PaymentDate">Payment Date</label>
+                        <input
+                        className={styles.form_control}
+                        id="PaymentDate"
+                        type="date"
+                        name='PaymentDate'
+                        value={transactionsData.PaymentDate}
+                        onChange={handleInputChange}
+                        />
+                    </div>
 
                 <select id="purpose" className={styles.form_control} name='Purpose' value={transactionsData.Purpose} onChange={handleInputChange}>
                     <option>Full Payment</option>

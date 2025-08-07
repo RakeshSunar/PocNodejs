@@ -49,7 +49,6 @@ import  Link  from 'next/link';
             headers: { Authorization: `Bearer ${token}` }
             });
 
-            console.log("customerservicerecordview page services-- ",res.data)
 
             setService(res.data); // adjust based on response // adjust based on response
         } catch (error) {

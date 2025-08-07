@@ -32,7 +32,6 @@ const EmployeeProfileView = ({ params }) => {
   const [showLeavePopup, setShowLeavePopup] = useState(false);
   const [leavePopupData, setLeavePopupData] = useState(false);
   const [leaveData, setLeaveData] = useState();
-  console.log(leaveData, "leaveData from employee profile view");
   const [advanceForm, setAdvanceForm] = useState({
     Date: "",
     TransactionAmount: "",

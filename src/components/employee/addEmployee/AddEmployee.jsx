@@ -29,7 +29,6 @@ export default function AddEmployee() {
     e.preventDefault();
      try {
     const token = getCookieValue("token");
-      console.log("token", token);
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/api/employees`,
         formData,

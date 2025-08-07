@@ -16,7 +16,6 @@ function page (propsPromise){
           headers: { Authorization: `Bearer ${token}` }
         });
 
-        // console.log("res",res.data)
 
         setCustomerData(res.data); // adjust based on response // adjust based on response
       } catch (error) {

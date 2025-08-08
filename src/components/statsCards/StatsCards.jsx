@@ -1,8 +1,7 @@
 "use client"
 import React from 'react'
 
-function StatsCards({customers}) {
-  console.log("totol customers ---?", customers)
+function StatsCards({customers,customerTransactions}) {
   const totalCustomers = customers.length || 0;
   // const monthlyTurnover = customers.reduce((acc, customer) => acc + parseFloat(customer.total_amount || 0), 0);
 
@@ -10,13 +9,13 @@ function StatsCards({customers}) {
 const currentMonth = currentDate.getMonth(); // 0-indexed (0 = Jan)
 const currentYear = currentDate.getFullYear();
 
-const monthlyTurnover = customers.reduce((acc, customer) => {
-  const regDate = new Date(customer.date_of_registration);
+const monthlyTurnover = customerTransactions.reduce((acc, transaction) => {
+  const regDate = new Date(transaction.PaymentDate.split("T")[0]);
   const regMonth = regDate.getMonth();
   const regYear = regDate.getFullYear();
 
   if (regMonth === currentMonth && regYear === currentYear) {
-    return acc + parseFloat(customer.total_amount || 0);
+    return acc + parseFloat(transaction.TransactionAmount || 0);
   }
   return acc;
 }, 0);

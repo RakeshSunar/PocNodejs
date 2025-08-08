@@ -68,12 +68,12 @@ const CustomerServiceRecords = () => {
 
 
   const handleSearch = () => {
-    console.log('Search criteria:', searchForm);
+    // console.log('Search criteria:', searchForm);
     // Add your search logic here
   };
 
   const handleAddTransaction = (customerId) => {
-    console.log('Add transaction for customer:', customerId);
+    // console.log('Add transaction for customer:', customerId);
     // Add your transaction logic here
   };
 

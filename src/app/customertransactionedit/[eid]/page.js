@@ -33,7 +33,6 @@ const fetchTransactionData = async() =>{
             {headers:{Authorization:`Bearer ${token}`,
         }})
         setTransactionData(res.data[0])
-        console.log("getTransaction",res.data[0])
 
     }catch (error){
 
@@ -68,7 +67,6 @@ const onSubmit = async() =>{
                 router.back(); // ✅ Go to previous page
             }
             setTransactionData({TransactionAmount:"",Purpose:"",NextInstallmentDate:""})
-        console.log("first11",response.data)
 
     }catch (error){
 

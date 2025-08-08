@@ -22,7 +22,6 @@ function page (propsPromise){
           headers: { Authorization: `Bearer ${token}` }
         });
 
-        console.log("customerData",res.data)
 
         setCustomerData(res.data); // adjust based on response // adjust based on response
       } catch (error) {
@@ -36,7 +35,6 @@ function page (propsPromise){
           headers: { Authorization: `Bearer ${token}` }
         });
 
-        console.log("employees---",res.data)
 
         setEmployees(res.data); // adjust based on response // adjust based on response
       } catch (error) {
@@ -97,7 +95,6 @@ function page (propsPromise){
                 router.back(); // ✅ Go to previous page
             }
 
-             console.log("TransactionData ==>",TransactionData)
             setTransactionData(
                 { operator_id: "",
                   other_operator_name: "",  

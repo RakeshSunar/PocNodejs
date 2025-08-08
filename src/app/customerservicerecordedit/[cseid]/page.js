@@ -11,7 +11,6 @@ function page (propsPromise){
 const str = params.cseid.toString();
 const customerID = parseInt(str.split("-")[0]); // 17
 const serviceID = parseInt(str.split("-")[1]);
-// console.log(str)
         const [customerData, setCustomerData] = useState({
             name: "",
             contact_no: "",
@@ -46,7 +45,6 @@ const serviceID = parseInt(str.split("-")[1]);
           headers: { Authorization: `Bearer ${token}` }
         });
 
-        console.log("employees---",res.data)
 
         setEmployees(res.data); // adjust based on response // adjust based on response
       } catch (error) {
@@ -60,7 +58,6 @@ const serviceID = parseInt(str.split("-")[1]);
           headers: { Authorization: `Bearer ${token}` }
         });
 
-        console.log("services--- id",res.data)
         setServices(
                 { operator_id: "",
                   other_operator_name: "",  
@@ -81,9 +78,9 @@ const serviceID = parseInt(str.split("-")[1]);
     fetchServiceData()
   }, []);
 
-      useEffect(()=>{
-        console.log(services,"servicesservices")
-      },[services])
+      // useEffect(()=>{
+      //   console.log(services,"servicesservices")
+      // },[services])
 
     const router = useRouter();
 
@@ -96,6 +93,7 @@ const serviceID = parseInt(str.split("-")[1]);
   // }
 
   const handleInputChange = (e) => {
+    debugger;
   const { name, value } = e.target;
   setServices(prev => {
     const updated = [...prev];
@@ -144,7 +142,6 @@ const serviceID = parseInt(str.split("-")[1]);
 
     }
 
-    // console.log("services data checklist---",services[0].operator_name)
     return (
    
         <div className={styles.AddCustomerTransactionWrapper}>
@@ -182,8 +179,7 @@ const serviceID = parseInt(str.split("-")[1]);
                     <option>Kiran</option> */}
                 </select>
 
-                
-                {services[0].operator_id === -1 && (
+                {(services[0].operator_id === "-1" || services[0].operator_id === -1 )&& (
                     <div className={styles.input_container}>
                         <label htmlFor="OperatorName">Other Operator name</label>
                         <input

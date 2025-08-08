@@ -24,7 +24,6 @@ const [employees, setEmployees] = useState([])
             Authorization: `Bearer ${getCookieValue('token')}`,
           },
         })
-        console.log("response employees", response.data)
         setEmployees(response.data)
       } catch (error) {
         console.error("Failed to fetch customers:", error)
@@ -49,7 +48,7 @@ const [employees, setEmployees] = useState([])
   };
 
   const handleSearch = () => {
-    console.log('Search criteria:', searchForm);
+    // console.log('Search criteria:', searchForm);
     // Add your search logic here
   };
 

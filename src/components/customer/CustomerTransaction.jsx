@@ -54,7 +54,7 @@ const fetchCustomers = async () => {
   // };
 
   const handleSearch = () => {
-    console.log('Search criteria:', searchForm);
+    // console.log('Search criteria:', searchForm);
     // Add your search logic here
   };
 

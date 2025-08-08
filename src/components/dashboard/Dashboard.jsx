@@ -13,6 +13,7 @@ import { getCookieValue } from "../../../utils/getCookie"
 
 export default function Dashboard() {
   const [customers, setCustomers] = useState([])
+  const [customerTransactions, setCustomerTransactions] = useState([])
 //   function getCookieValue(name) {
 //   const cookieString = document.cookie;
 //   const cookies = cookieString.split('; ');
@@ -39,10 +40,24 @@ const fetchCustomers = async () => {
         console.error("Failed to fetch customers:", error)
       }
     }
+
+  const fetchTransactionData = async () => {
+      try {
+        const token = getCookieValue("token");
+        const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/transactions/getAllCustomerTransaction`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+
+        setCustomerTransactions(res.data); // adjust based on response 
+      } catch (error) {
+        console.error('Error fetching customer data:', error);
+      }
+    };    
   useEffect(() => {
     
 
     fetchCustomers()
+    fetchTransactionData()
   }, [])
 
   return (
@@ -50,10 +65,10 @@ const fetchCustomers = async () => {
       <div className="main-content">
         <Header />
         <main className="dashboard">
-          <StatsCards customers={customers} />
+          <StatsCards customers={customers} customerTransactions={customerTransactions} />
           <div className="dashboard-grid">
             <RecentCustomer customers={customers} />
-            <Progress  customers={customers}/>
+            <Progress  customers={customers} />
           </div>
         </main>
       </div>

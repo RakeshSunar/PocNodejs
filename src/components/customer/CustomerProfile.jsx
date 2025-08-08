@@ -27,7 +27,6 @@ const CustomerProfile = () => {
 
   },[])
 
-  console.log("first render customerData -->", customerData);
   const [searchForm, setSearchForm] = useState({
     customerName: '',
     customerContactNo: ''

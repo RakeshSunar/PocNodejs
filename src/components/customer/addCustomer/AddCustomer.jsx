@@ -31,10 +31,26 @@ export default function AddCustomer() {
 
   const handleInputChange = (e) => {
     const { name, value } = e.target
+    const numericValue = Number(value);
     setFormData((prev) => ({
       ...prev,
       [name]: value,
     }))
+    if(e.target.name === "contract_period"){
+      if(formData.date_of_registration !== ""){
+        // console.log(formData.date_of_registration,"formData.date_of_registration");
+        const dateObj = new Date(formData.date_of_registration);
+      dateObj.setMonth(dateObj.getMonth() + numericValue);
+      // console.log(value,"<=== value")
+      // console.log(dateObj.toISOString().split("T")[0],'<=== dateObj.toISOString().split("T")[0]')
+      setFormData((prev) => ({
+      ...prev,
+      ["end_date_of_contract"]: dateObj.toISOString().split("T")[0],
+    }))
+      }else{
+        return
+      }
+    }
   }
 
   const handleCheckboxChange = (e) => {

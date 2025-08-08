@@ -1,41 +1,38 @@
 // components/CustomerManagement.js
 'use client';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styles from './customer.module.css';
 import Header from '../header/Header';
+import { getCookieValue } from '../../../utils/getCookie';
+import axios from 'axios';
+import Link from 'next/link';
 
 const CustomerProfile = () => {
+
+    const [customerData, setCustomerData] = useState([]);
+
+  useEffect(()=>{
+    const fetchDataCustomerData = async () => {
+      try {
+        const token = getCookieValue("token");
+        const res = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/customers`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        setCustomerData(res.data);
+      } catch (error) {
+        console.error('Error fetching customer data:', error);
+      }
+    };
+    fetchDataCustomerData();
+
+  },[])
+
+  console.log("first render customerData -->", customerData);
   const [searchForm, setSearchForm] = useState({
     customerName: '',
     customerContactNo: ''
   });
 
-  const [customers] = useState([
-    {
-      id: 3,
-      name: 'rishi',
-      contactNo: '9619438148',
-      date: '06/06/0170',
-      totalAmount: 10000,
-      installment: 'Add Transaction'
-    },
-    {
-      id: 2,
-      name: 'Vishwajit Rajkumar Rajbhar',
-      contactNo: '9619438148',
-      date: '2022-05-25',
-      totalAmount: 10000,
-      installment: 'Add Transaction'
-    },
-    {
-      id: 1,
-      name: 'Vishwajit Rajkumar Rajbhar',
-      contactNo: '8779546242',
-      date: '2022-05-27',
-      totalAmount: 10000,
-      installment: 'Add Transaction'
-    }
-  ]);
 
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -50,11 +47,6 @@ const CustomerProfile = () => {
   const handleSearch = () => {
     console.log('Search criteria:', searchForm);
     // Add your search logic here
-  };
-
-  const handleAddTransaction = (customerId) => {
-    console.log('Add transaction for customer:', customerId);
-    // Add your transaction logic here
   };
 
   return (
@@ -113,20 +105,17 @@ const CustomerProfile = () => {
               </tr>
             </thead>
             <tbody>
-              {customers.map((customer) => (
+              {customerData.map((customer) => (
                 <tr key={customer.id} className={styles.tableRow}>
                   <td className={styles.td}>{customer.id}</td>
                   <td className={styles.td}>{customer.name}</td>
-                  <td className={styles.td}>{customer.contactNo}</td>
-                  <td className={styles.td}>{customer.date}</td>
-                  <td className={styles.td}>{customer.totalAmount}</td>
+                  <td className={styles.td}>{customer.contact_no}</td>
+                  <td className={styles.td}>{customer.date_of_registration.split('T')[0]}</td>
+                  <td className={styles.td}>{customer.total_amount}</td>
                   <td className={styles.td}>
-                    <button
-                      onClick={() => handleAddTransaction(customer.id)}
-                      className={styles.transactionButton}
-                    >
+                    <Link href={`/customerprofileview/${customer.id}`} className={styles.searchButton}>
                        View 
-                    </button>
+                    </Link>
                   </td>
                 </tr>
               ))}

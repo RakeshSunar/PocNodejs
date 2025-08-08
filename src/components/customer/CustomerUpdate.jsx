@@ -52,7 +52,7 @@ const CustomerUpadateDetails = () => {
     }
   };
 
-
+  fetchCustomers();
 
 
 
@@ -75,9 +75,9 @@ const CustomerUpadateDetails = () => {
   };
 
   
-  useEffect(() => {
-    fetchCustomers();
-  }, []);
+  // useEffect(() => {
+  //   fetchCustomers();
+  // }, []);
 
   return (
     <div className={styles.container}>

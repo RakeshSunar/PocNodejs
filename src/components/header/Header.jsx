@@ -63,7 +63,7 @@ function Header() {
                 </svg>
               </button>
               <div className="user-profile">
-                <div className="avatar">{(username.charAt(0)).toUpperCase()}</div>
+                <div className="avatar">{username && (username.charAt(0)).toUpperCase()}</div>
                 <span className="username">Current User: {username}</span>
               </div>
               <button 

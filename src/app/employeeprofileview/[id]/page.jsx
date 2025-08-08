@@ -152,6 +152,7 @@ const EmployeeProfileView = ({ params }) => {
   };
 
   const handleDateRangeChange = (ranges) => {
+    // debugger
     const { startDate, endDate } = ranges.selection;
 
     setDateRange([ranges.selection]);
@@ -192,6 +193,7 @@ const EmployeeProfileView = ({ params }) => {
   ) => {
     setPosting(true);
     try {
+      debugger
       const token = getCookieValue("token");
       if (!token) return alert("Authentication token not found.");
       let payload;
@@ -203,8 +205,8 @@ const EmployeeProfileView = ({ params }) => {
       if (type === "leave") {
         if (form.Purpose === "more than one") {
           payload = {
-            start_date: form.start_date || form.StartDate,
-            end_date: form.end_date || form.EndDate,
+            start_date: form.start_date || leaveForm.start_date,
+            end_date: form.end_date || leaveForm.end_date,
             purpose: form.Purpose,
           };
         } else {

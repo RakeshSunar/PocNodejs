@@ -1,13 +1,66 @@
 import React from 'react'
 
 import styles from '@/components/customer/CustomerDetails.module.css'
+import { getCookieValue } from '../../../utils/getCookie';
+import { useRouter } from 'next/navigation';
+import axios from 'axios';
 
 function AddCustomerTransaction({customerData}) {
+  const router = useRouter();
+
+  const [transactionsData, setTransactionData] = React.useState({
+    TransactionAmount: 0,
+    Purpose: "",
+    NextInstallmentDate: "",    
+  });
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setTransactionData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    // Handle form submission logic here
+        try{
+        const token =getCookieValue("token")
+        // ✅ If date is empty, set it to today's date in YYYY-MM-DD format
+            const today = new Date();
+            const formattedToday = today.toISOString().split("T")[0]; // "YYYY-MM-DD"
+            const formattedData = {
+            TransactionAmount: Number(transactionsData.TransactionAmount),
+            Purpose: transactionsData.Purpose,
+            NextInstallmentDate: transactionsData.NextInstallmentDate ? transactionsData.NextInstallmentDate.split("T")[0] : formattedToday,
+            };
+            const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/transactions/${customerData.id}`, formattedData,
+                {headers:{Authorization:`Bearer ${token}`,
+            }})
+        //  const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/transactions/${params.eid}`,formattedData,
+        //         {headers:{Authorization:`Bearer ${token}`,
+        //     }})
+            
+            if (response.status === 200 || response.status === 201) {
+                alert("✅ Customer data updated successfully!");
+                router.back(); // ✅ Go to previous page
+            }
+            setTransactionData({TransactionAmount:"",Purpose:"",NextInstallmentDate:""})
+        console.log("first11",response.data)
+
+    }catch (error){
+
+        console.error("❌ Submission failed:", error.response?.data || error);
+    }
+
+
+  }
   return (
     <div className={styles.AddCustomerTransactionWrapper}>
      <div className={styles.card}>
             <h2 >Add Transaction Details </h2>
-            <form method="POST">
+            <form method="POST" onSubmit={handleSubmit} >
               <div className={styles.input_wrapper}>
                 <div className={styles.input_container}>
                   <label htmlFor="name">Name</label>
@@ -35,16 +88,32 @@ function AddCustomerTransaction({customerData}) {
                     className={styles.form_control}
                     id="enterAmount"
                     type="number"
+                    name='TransactionAmount'
+                    value={transactionsData.TransactionAmount}
                     // value={customerData.contact_no}
-                    readOnly
+                    // readOnly
+                    onChange={handleInputChange}
                   />
                 </div>
 
-                <select id="purpose" className={styles.form_control}>
+                <select id="purpose" className={styles.form_control} name='Purpose' value={transactionsData.Purpose} onChange={handleInputChange}>
                     <option>Full Payment</option>
                     <option>Part Payment</option>
                     <option>Additional Service Charge</option>
                 </select>
+                {transactionsData.Purpose === 'Part Payment' && (
+                    <div className={styles.input_container}>
+                        <label htmlFor="NextInstallmentDate">Next Installment Date</label>
+                        <input
+                        className={styles.form_control}
+                        id="NextInstallmentDate"
+                        type="date"
+                        name='NextInstallmentDate'
+                        value={transactionsData.NextInstallmentDate}
+                        onChange={handleInputChange}
+                        />
+                    </div>
+                )}
 
 
               <button type='submit' className={styles.submitButton}>Submit</button>

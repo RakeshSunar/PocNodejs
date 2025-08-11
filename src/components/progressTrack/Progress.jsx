@@ -1,6 +1,30 @@
 import React from 'react'
 
-function Progress({ customers  }) {
+function Progress({ customersAllServiceRecords}) {
+  const today = new Date();
+const currentMonth = today.getMonth(); // 0-indexed
+const currentYear = today.getFullYear();
+
+const thisMonthPendingServices = customersAllServiceRecords.filter((record) => {
+  const nextServiceDate = new Date(record.next_service_date);
+  return (
+    nextServiceDate.getMonth() === currentMonth &&
+    nextServiceDate.getFullYear() === currentYear
+  );
+}).length;
+
+// Calculate next month and handle year rollover
+const nextMonth = (currentMonth + 1) % 12;
+const nextMonthYear = currentMonth === 11 ? currentYear + 1 : currentYear;
+
+const nextMonthServices = customersAllServiceRecords.filter((record) => {
+  const serviceDate = new Date(record.next_service_date);
+  return (
+    serviceDate.getMonth() === nextMonth &&
+    serviceDate.getFullYear() === nextMonthYear
+  );
+}).length;
+
   return (
     <div className="progress-section">
               <div className="card">
@@ -30,7 +54,7 @@ function Progress({ customers  }) {
                       </svg>
                       <span className="progress-text">This month Services</span>
                     </div>
-                    <span className="progress-value">0</span>
+                    <span className="progress-value">{thisMonthPendingServices}</span>
                   </div>
 
                   <div className="progress-item">
@@ -81,7 +105,7 @@ function Progress({ customers  }) {
                     </div>
                     <div className="service-info">
                       <span className="service-label">No. of service</span>
-                      <span className="service-value">0</span>
+                      <span className="service-value">{nextMonthServices}</span>
                     </div>
                   </div>
                 </div>

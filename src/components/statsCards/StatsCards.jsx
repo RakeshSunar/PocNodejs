@@ -1,9 +1,12 @@
 "use client"
 import React from 'react'
 
-function StatsCards({customers,customerTransactions}) {
+function StatsCards({customers,customerTransactions,customersAllServiceRecords}) {
+
   const totalCustomers = customers.length || 0;
+  // const pendingServices = customersAllServiceRecords.length || 0;
   // const monthlyTurnover = customers.reduce((acc, customer) => acc + parseFloat(customer.total_amount || 0), 0);
+
 
   const currentDate = new Date();
 const currentMonth = currentDate.getMonth(); // 0-indexed (0 = Jan)
@@ -19,6 +22,18 @@ const monthlyTurnover = customerTransactions.reduce((acc, transaction) => {
   }
   return acc;
 }, 0);
+
+
+// const currentDate = new Date();
+currentDate.setHours(0, 0, 0, 0); // normalize time to compare date-only
+
+const pendingServices = customersAllServiceRecords.filter((record) => {
+  const nextServiceDate = new Date(record.next_service_date);
+  nextServiceDate.setHours(0, 0, 0, 0);
+  return nextServiceDate >= currentDate;
+}).length;
+
+
   return (
     <>
       {/* Stats Cards */}
@@ -128,7 +143,7 @@ const monthlyTurnover = customerTransactions.reduce((acc, transaction) => {
                   </div>
                   <div className="stat-info">
                     <span className="stat-label">Pending Services</span>
-                    <span className="stat-value">0</span>
+                    <span className="stat-value">{pendingServices}</span>
                     <div className="stat-trend">
                       <span className="stat-trend-label">Since last month</span>
                       <svg

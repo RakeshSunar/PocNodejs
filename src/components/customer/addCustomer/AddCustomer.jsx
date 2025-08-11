@@ -194,7 +194,7 @@ export default function AddCustomer() {
             />
           </div>
           <div className={styles.fieldGroup}>
-            <label className={styles.label}>Contract Period</label>
+            <label className={styles.label}>Contract Period (months)</label>
             <input
               type="number"
               name="contract_period"

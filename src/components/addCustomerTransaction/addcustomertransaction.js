@@ -32,16 +32,16 @@ function AddCustomerTransaction({customerData}) {
             const today = new Date();
             const formattedToday = today.toISOString().split("T")[0]; // "YYYY-MM-DD"
             // Function to add months
-            const addMonths = (date, months) => {
-              const d = new Date(date);
-              d.setMonth(d.getMonth() + months);
-              return d.toISOString().split("T")[0];
-            };
+            // const addMonths = (date, months) => {
+            //   const d = new Date(date);
+            //   d.setMonth(d.getMonth() + months);
+            //   return d.toISOString().split("T")[0];
+            // };
             const formattedData = {
             TransactionAmount: Number(transactionsData.TransactionAmount),
             Purpose: transactionsData.Purpose,
             PaymentDate:transactionsData.PaymentDate ? transactionsData.PaymentDate.split("T")[0] : formattedToday,
-            NextInstallmentDate: transactionsData.NextInstallmentDate ? transactionsData.NextInstallmentDate.split("T")[0] : addMonths(formattedToday, 3),
+            NextInstallmentDate: transactionsData.NextInstallmentDate ? transactionsData.NextInstallmentDate.split("T")[0] :null,
             };
             const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/transactions/${customerData.id}`, formattedData,
                 {headers:{Authorization:`Bearer ${token}`,

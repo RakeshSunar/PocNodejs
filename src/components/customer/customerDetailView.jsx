@@ -161,7 +161,7 @@ export default  function CustomerDetailsView({customerData,customerId,transactio
                   <td>{txn.TransactionAmount}</td>
                   <td>{txn.PaymentDate.split('T')[0]}</td>
                   <td>{txn.Purpose}</td>
-                  <td>{txn.NextInstallmentDate.split('T')[0]}</td>
+                  <td>{txn.NextInstallmentDate? txn.NextInstallmentDate.split('T')[0] : null}</td>
                   <td>
                     <Link href={`/customertransactionedit/${txn.TransactionId}`} >
                       <span >Edit</span>

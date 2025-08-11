@@ -46,7 +46,7 @@ function page (propsPromise){
     fetchEmployeeData();
   }, []);
 
-      const [TransactionData,setTransactionData] =useState({
+      const [ServiceData,setServiceData] =useState({
         operator_id: "",
         other_operator_name: "",
         purpose:"",
@@ -59,7 +59,7 @@ function page (propsPromise){
 
       const handleInputChange = (e) => {
         const { name, value } = e.target
-        setTransactionData((prev) => ({
+        setServiceData((prev) => ({
         ...prev,
         [name]: value,
         }))
@@ -75,15 +75,26 @@ function page (propsPromise){
             // ✅ If date is empty, set it to today's date in YYYY-MM-DD format
             const today = new Date();
             const formattedToday = today.toISOString().split("T")[0]; // "YYYY-MM-DD"
+
+              let nextServiceDateValue = ServiceData.next_service_date;
+
+            // ✅ Auto-calculate 3 months later for Second/Third Service
+            if (ServiceData.purpose === "Second Service" || ServiceData.purpose === "Third Service") {
+              const futureDate = new Date(today);
+              futureDate.setMonth(futureDate.getMonth() + 3);
+              nextServiceDateValue = futureDate.toISOString().split("T")[0];
+            } else if (!nextServiceDateValue) {
+              nextServiceDateValue = null;
+            }
             const formattedData = {
             customer_id:customerData.id,
-            operator_id:TransactionData.operator_id === "other"? -1: Number(TransactionData.operator_id),
-            other_operator_name: TransactionData.other_operator_name? TransactionData.other_operator_name : 'NA',
-            purpose: TransactionData.purpose,
-            classification: TransactionData.classification,
-            // date_of_service: TransactionData.date_of_service,
-            date_of_service: TransactionData.date_of_service || formattedToday,
-            next_service_date: TransactionData.next_service_date || formattedToday,
+            operator_id:ServiceData.operator_id === "other"? -1: Number(ServiceData.operator_id),
+            other_operator_name: ServiceData.other_operator_name? ServiceData.other_operator_name : 'NA',
+            purpose: ServiceData.purpose,
+            classification: ServiceData.classification,
+            // date_of_service: ServiceData.date_of_service,
+            date_of_service: ServiceData.date_of_service || formattedToday,
+            next_service_date: nextServiceDateValue,
             };
             
             const res = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/services/`,formattedData,
@@ -95,7 +106,7 @@ function page (propsPromise){
                 router.back(); // ✅ Go to previous page
             }
 
-            setTransactionData(
+            setServiceData(
                 { operator_id: "",
                   other_operator_name: "",  
                   purpose: "",  
@@ -139,7 +150,7 @@ function page (propsPromise){
                   />
                 </div>
 
-                <select id="operator_id"  name='operator_id' value={TransactionData.operator_id} className={styles.form_control} onChange={handleInputChange}> 
+                <select id="operator_id"  name='operator_id' value={ServiceData.operator_id} className={styles.form_control} onChange={handleInputChange}> 
                     <option value="" disabled>-- Select Operator Name --</option>
 
                     {employees.map((item) => (<option key={item.id} value={item.id}>{item.employee_name}</option>))}
@@ -149,7 +160,7 @@ function page (propsPromise){
                 </select>
 
                 
-                {TransactionData.operator_id === "-1" && (
+                {ServiceData.operator_id === "-1" && (
                     <div className={styles.input_container}>
                         <label htmlFor="OperatorName">Other Operator name</label>
                         <input
@@ -157,13 +168,13 @@ function page (propsPromise){
                         id="other_operator_name"
                         name="other_operator_name"
                         type="text"
-                        value={TransactionData.other_operator_name}
+                        value={ServiceData.other_operator_name}
                         onChange={handleInputChange}
                         />
                     </div>
                 )}
 
-                <select id="purpose"  name='purpose' value={TransactionData.purpose} className={styles.form_control} onChange={handleInputChange}> 
+                <select id="purpose"  name='purpose' value={ServiceData.purpose} className={styles.form_control} onChange={handleInputChange}> 
                     <option value="" disabled>-- Select Purpose of Service --</option>
                     <option>Other</option>
                     <option>First Service</option>
@@ -175,7 +186,7 @@ function page (propsPromise){
 
                 </select>
 
-                {["Other", "First Service"].includes(TransactionData.purpose) && (
+                {["Other", "First Service"].includes(ServiceData.purpose) && (
                     <>
                         <div className={styles.input_container}>
                         <label htmlFor="classification">Classification</label>
@@ -184,7 +195,7 @@ function page (propsPromise){
                             id="classification"
                             name="classification"
                             type="text"
-                            value={TransactionData.classification}
+                            value={ServiceData.classification}
                             onChange={handleInputChange}
                         />
                         </div>
@@ -195,7 +206,7 @@ function page (propsPromise){
                             id="next_service_date"
                             name="next_service_date"
                             type="date"
-                            value={TransactionData.next_service_date}
+                            value={ServiceData.next_service_date}
                             onChange={handleInputChange}
                         />
                         </div>

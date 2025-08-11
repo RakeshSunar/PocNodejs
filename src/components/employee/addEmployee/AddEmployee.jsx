@@ -132,7 +132,7 @@ export default function AddEmployee() {
             />
           </div>
           <div className={styles.fieldGroup}>
-            <label className={styles.label}>Bond Period</label>
+            <label className={styles.label}>Bond Period (months)</label>
             <input
               type="number"
               name="bond_period_number"

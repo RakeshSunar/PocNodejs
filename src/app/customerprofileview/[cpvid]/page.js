@@ -387,7 +387,7 @@ function CustomerProfileViewPage(propsPromise) {
                   <td>{txn.TransactionAmount}</td>
                   <td>{txn.PaymentDate.split('T')[0]}</td>
                   <td>{txn.Purpose}</td>
-                  <td>{txn.NextInstallmentDate?txn.NextInstallmentDate.split('T')[0] : null}</td>
+                  <td>{`${txn.NextInstallmentDate?txn.NextInstallmentDate.split('T')[0] : "Done"}`}</td>
                 </tr>
               ))}
             </tbody>

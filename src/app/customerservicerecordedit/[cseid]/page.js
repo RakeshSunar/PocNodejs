@@ -93,7 +93,6 @@ const serviceID = parseInt(str.split("-")[1]);
   // }
 
   const handleInputChange = (e) => {
-    debugger;
   const { name, value } = e.target;
   setServices(prev => {
     const updated = [...prev];
@@ -120,7 +119,7 @@ const serviceID = parseInt(str.split("-")[1]);
             classification: services[0].classification,
             // date_of_service: services[0].date_of_service,
             date_of_service: services[0].date_of_service.split("T")[0] || formattedToday,
-            next_service_date: services[0].next_service_date.split("T")[0] || formattedToday,
+            next_service_date: services[0].next_service_date.split("T")[0] || null,
             };
             
             const res = await axios.put(`${process.env.NEXT_PUBLIC_API_URL}/api/services/${serviceID}`,formattedData,
@@ -225,7 +224,7 @@ const serviceID = parseInt(str.split("-")[1]);
                             id="next_service_date"
                             name="next_service_date"
                             type="date"
-                            value={services[0].next_service_date.split("T")[0] || ''}
+                            value={services[0].next_service_date ? services[0].next_service_date.split("T")[0] : null}
                             onChange={handleInputChange}
                         />
                         </div>

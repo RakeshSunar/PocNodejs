@@ -2,6 +2,7 @@
 import React from 'react'
 
 function StatsCards({customers,customerTransactions,customersAllServiceRecords}) {
+  console.log("customersAllServiceRecords--->",customersAllServiceRecords)
 
   const totalCustomers = customers.length || 0;
   // const pendingServices = customersAllServiceRecords.length || 0;
@@ -29,7 +30,8 @@ currentDate.setHours(0, 0, 0, 0); // normalize time to compare date-only
 
 const pendingServices = customersAllServiceRecords.filter((record) => {
   const nextServiceDate = new Date(record.next_service_date);
-  nextServiceDate.setHours(0, 0, 0, 0);
+  nextServiceDate.setHours(0, 0, 0, 0); // normalize time to compare date-only
+  // Check if the next service date is today or in the future
   return nextServiceDate >= currentDate;
 }).length;
 

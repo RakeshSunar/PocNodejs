@@ -351,7 +351,7 @@ function CustomerProfileViewPage(propsPromise) {
                   <td>{service.other_operator_name || ''}</td>
                   {/* <td>{service.purpose}</td> */}
                   {/* <td>{service.classification === "" ? "NA" : service.classification}</td> */}
-                  <td>{service.next_service_date.split('T')[0]}</td>
+                  <td>{`${service.next_service_date ? service.next_service_date.split('T')[0] : 'Done'}`}</td>
                   {/* <td>
                     <Link href={`/customerservicerecordedit/${params.scid}-${service.id}`} >
                       <span >Edit</span>
@@ -387,7 +387,7 @@ function CustomerProfileViewPage(propsPromise) {
                   <td>{txn.TransactionAmount}</td>
                   <td>{txn.PaymentDate.split('T')[0]}</td>
                   <td>{txn.Purpose}</td>
-                  <td>{txn.NextInstallmentDate.split('T')[0]}</td>
+                  <td>{`${txn.NextInstallmentDate?txn.NextInstallmentDate.split('T')[0] : "Done"}`}</td>
                 </tr>
               ))}
             </tbody>

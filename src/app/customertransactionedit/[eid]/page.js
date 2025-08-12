@@ -52,10 +52,16 @@ const onSubmit = async() =>{
         // ✅ If date is empty, set it to today's date in YYYY-MM-DD format
             const today = new Date();
             const formattedToday = today.toISOString().split("T")[0]; // "YYYY-MM-DD"
+            let nextServiceDateValue;
+             if (transactionsData.Purpose === "Full Payment" || transactionsData.Purpose === "Additional Service Charge") {
+             nextServiceDateValue =  null;
+            } else if (!nextServiceDateValue) {
+              nextServiceDateValue = transactionsData.NextInstallmentDate.split("T")[0];
+            }
             const formattedData = {
             TransactionAmount: Number(transactionsData.TransactionAmount),
             Purpose: transactionsData.Purpose,
-            NextInstallmentDate: transactionsData.NextInstallmentDate ? transactionsData.NextInstallmentDate.split("T")[0] : formattedToday,
+            NextInstallmentDate: nextServiceDateValue,
             };
 
          const response = await axios.put(`${process.env.NEXT_PUBLIC_API_URL}/api/transactions/${params.eid}`,formattedData,

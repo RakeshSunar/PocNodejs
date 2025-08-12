@@ -25,6 +25,11 @@ const nextMonthServices = customersAllServiceRecords.filter((record) => {
   );
 }).length;
 
+const completedServices = customersAllServiceRecords.filter(
+  (record) => !record.next_service_date // null, undefined, or empty string
+).length;
+
+
   return (
     <div className="progress-section">
               <div className="card">
@@ -76,7 +81,7 @@ const nextMonthServices = customersAllServiceRecords.filter((record) => {
                       </svg>
                       <span className="progress-text">Completed Services</span>
                     </div>
-                    <span className="progress-value">0</span>
+                    <span className="progress-value">{completedServices}</span>
                   </div>
                 </div>
               </div>

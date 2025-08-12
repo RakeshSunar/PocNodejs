@@ -65,6 +65,35 @@ const UpdateEmployeePage = ({ params }) => {
       ...prev,
       [name]: value,
     }));
+    if(e.target.name === "bond_period_number"){
+      const numericValue = Number(value);
+      if(formData.date_of_joining !== ""){
+        // console.log(formData.date_of_registration,"formData.date_of_registration");
+        const dateObj = new Date(formData.date_of_joining);
+      dateObj.setMonth(dateObj.getMonth() + numericValue);
+      // console.log(value,"<=== value")
+      // console.log(dateObj.toISOString().split("T")[0],'<=== dateObj.toISOString().split("T")[0]')
+      setFormData((prev) => ({
+      ...prev,
+      ["bond_period_date"]: dateObj.toISOString().split("T")[0],
+    }))
+      }else{
+        return
+      }
+    }
+    if(e.target.name === "date_of_joining"){
+      if(formData.bond_period_number !== ""){
+        const numericValue = Number(formData.bond_period_number);
+        const dateObj = new Date(value);
+      dateObj.setMonth(dateObj.getMonth() + numericValue);
+      setFormData((prev) => ({
+      ...prev,
+      ["bond_period_date"]: dateObj.toISOString().split("T")[0],
+    }))
+      }else{
+        return
+      }
+    }
   };
 
   const handleUpdate = async (e) => {

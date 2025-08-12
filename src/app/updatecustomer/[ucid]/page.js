@@ -35,6 +35,35 @@ export default function AddCustomer(propsPromise) {
       ...prev,
       [name]: value,
     }))
+
+    if(e.target.name === "contract_period"){
+      const numericValue = Number(value);
+      if(formData.date_of_registration !== ""){
+        const dateObj = new Date(formData.date_of_registration);
+      dateObj.setMonth(dateObj.getMonth() + numericValue);
+      // console.log(value,"<=== value")
+      // console.log(dateObj.toISOString().split("T")[0],'<=== dateObj.toISOString().split("T")[0]')
+      setFormData((prev) => ({
+      ...prev,
+      ["end_date_of_contract"]: dateObj.toISOString().split("T")[0],
+    }))
+      }else{
+        return
+      }
+    }
+    if(e.target.name === "date_of_registration"){
+      if(formData.contract_period !== ""){
+        const numericValue = Number(formData.contract_period);
+        const dateObj = new Date(value);
+      dateObj.setMonth(dateObj.getMonth() + numericValue);
+      setFormData((prev) => ({
+      ...prev,
+      ["end_date_of_contract"]: dateObj.toISOString().split("T")[0],
+    }))
+      }else{
+        return
+      }
+    }
   }
 
   const handleCheckboxChange = (e) => {

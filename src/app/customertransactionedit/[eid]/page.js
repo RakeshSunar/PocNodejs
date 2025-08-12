@@ -46,7 +46,6 @@ fetchTransactionData();
 },[])
 
 const onSubmit = async() =>{
-  debugger
 
     try{
         const token =getCookieValue("token")

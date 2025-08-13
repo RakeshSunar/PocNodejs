@@ -114,6 +114,7 @@ function AddCustomerTransaction({customerData}) {
                     </div>
 
                 <select id="purpose" className={styles.form_control} name='Purpose' value={transactionsData.Purpose} onChange={handleInputChange}>
+                   <option value="" disabled>-- Select Purpose --</option>
                     <option>Full Payment</option>
                     <option>Part Payment</option>
                     <option>Additional Service Charge</option>

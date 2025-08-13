@@ -23,6 +23,7 @@ import axios from 'axios';
         });
 
         setCustomerData(res.data); // adjust based on response 
+        console.log("transactions",transactions)
       } catch (error) {
         console.error('Error fetching customer data:', error);
       }

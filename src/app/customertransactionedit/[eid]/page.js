@@ -12,6 +12,7 @@ function page(propsPromise) {
      const [transactionsData,setTransactionData] = useState({ 
            TransactionAmount:0,
         Purpose:"",
+        PaymentDate:"",
         NextInstallmentDate:"",})
        const handleInputChange = (e) => {
     const { name, value } = e.target
@@ -61,6 +62,7 @@ const onSubmit = async() =>{
             const formattedData = {
             TransactionAmount: Number(transactionsData.TransactionAmount),
             Purpose: transactionsData.Purpose,
+            PaymentDate:transactionsData.PaymentDate ? transactionsData.PaymentDate.split("T")[0] : formattedToday,
             NextInstallmentDate: nextServiceDateValue,
             };
 
@@ -123,6 +125,17 @@ const onSubmit = async() =>{
                     onChange={handleInputChange}
                   />
                 </div>
+                 <div className={styles.input_container}>
+                        <label htmlFor="PaymentDate">Payment Date</label>
+                        <input
+                        className={styles.form_control}
+                        id="PaymentDate"
+                        type="date"
+                        name='PaymentDate'
+                        value={transactionsData.PaymentDate?.split('T')[0] || ''}
+                        onChange={handleInputChange}
+                        />
+                    </div>
 
                 <select id="Purpose"  name='Purpose' value={transactionsData.Purpose} className={styles.form_control} onChange={handleInputChange}>
                     <option value="" disabled>-- Select Purpose --</option>

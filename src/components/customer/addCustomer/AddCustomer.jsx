@@ -26,7 +26,7 @@ export default function AddCustomer() {
     // selectedTreatments: [],
     address: "",
   })
-
+const [errors, setErrors] = useState({});
   const router = useRouter();
 
   const handleInputChange = (e) => {
@@ -103,8 +103,32 @@ export default function AddCustomer() {
     return selected.length > 0 ? selected.join(",") : "Selected treatment will visible here"
   }
 
+  const validateForm = () => {
+    let newErrors = {};
+
+    if (!formData.name.trim()) newErrors.name = "Name is required";
+    if (!formData.contact_no.trim()) newErrors.contact_no = "Contact number is required";
+    if (!formData.date_of_registration) newErrors.date_of_registration = "Date of registration is required";
+    if (!formData.contract_period) newErrors.contract_period = "Contract period is required";
+    if (!formData.end_date_of_contract) newErrors.end_date_of_contract = "End date is required";
+    if (!formData.total_amount) newErrors.total_amount = "Total amount is required";
+    if (
+      !Object.values(formData.type_of_treatment).some((v) => v)
+    ) {
+      newErrors.type_of_treatment = "Select at least one treatment";
+    }
+    if (!formData.address.trim()) newErrors.address = "Address is required";
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  }
+
   const handleSubmit = async (e) => {
   e.preventDefault();
+
+  if (!validateForm()) {
+      return; // Stop submission if invalid
+    }
 
   // Convert treatment object to array of selected treatment names
   const selectedTreatments = Object.entries(formData.type_of_treatment)
@@ -170,6 +194,7 @@ export default function AddCustomer() {
     address: "",
   });
 
+  setErrors({});
       // Redirect to the home page
       router.push('/'); 
       
@@ -196,6 +221,7 @@ export default function AddCustomer() {
               placeholder="Enter customer name"
               className={styles.input}
             />
+            {errors.name && <p className={styles.error}>{errors.name}</p>}
           </div>
           <div className={styles.fieldGroup}>
             <label className={styles.label}>Contact no</label>
@@ -207,6 +233,7 @@ export default function AddCustomer() {
               placeholder="+12-345 678 910"
               className={styles.input}
             />
+            {errors.contact_no && <p className={styles.error}>{errors.contact_no}</p>}
           </div>
         </div>
 
@@ -221,6 +248,7 @@ export default function AddCustomer() {
               onChange={handleInputChange}
               className={styles.dateInput}
             />
+            {errors.date_of_registration && <p className={styles.error}>{errors.date_of_registration}</p>}
           </div>
           <div className={styles.fieldGroup}>
             <label className={styles.label}>Contract Period (months)</label>
@@ -232,6 +260,7 @@ export default function AddCustomer() {
               placeholder="No."
               className={styles.input}
             />
+            {errors.contract_period && <p className={styles.error}>{errors.contract_period}</p>}
           </div>
           <div className={styles.fieldGroup}>
             <label className={styles.label}>End Date of Contract</label>
@@ -242,6 +271,7 @@ export default function AddCustomer() {
               onChange={handleInputChange}
               className={styles.dateInput}
             />
+            {errors.end_date_of_contract && <p className={styles.error}>{errors.end_date_of_contract}</p>}
           </div>
         </div>
 
@@ -266,6 +296,7 @@ export default function AddCustomer() {
               onChange={handleInputChange}
               className={styles.select}
             />
+            {errors.total_amount && <p className={styles.error}>{errors.total_amount}</p>}
           </div>
         </div>
 
@@ -274,6 +305,7 @@ export default function AddCustomer() {
           <h3 className={styles.treatmentTitle}>Type of Treatment</h3>
 
           <div className={styles.selectedTreatment}>{getSelectedTreatments()}</div>
+          {errors.type_of_treatment && <p className={styles.error}>{errors.type_of_treatment}</p>}
 
           <div className={styles.checkboxGrid}>
             <div className={styles.checkboxItem}>
@@ -376,6 +408,7 @@ export default function AddCustomer() {
               className={styles.textArea}
               rows={3}
             />
+             {errors.address && <p className={styles.error}>{errors.address}</p>}
           </div>
         </div>
 

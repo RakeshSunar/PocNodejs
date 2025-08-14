@@ -15,6 +15,8 @@ function AddCustomerTransaction({customerData}) {
     NextInstallmentDate: "",
   });
 
+   const [errors, setErrors] = React.useState({});
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setTransactionData((prev) => ({
@@ -23,8 +25,32 @@ function AddCustomerTransaction({customerData}) {
     }));
   };
 
+  const validateForm = () => {
+    let newErrors = {};
+
+    if (!transactionsData.TransactionAmount || Number(transactionsData.TransactionAmount) <= 0) {
+      newErrors.TransactionAmount = "Enter a valid amount greater than 0";
+    }
+    if (!transactionsData.Purpose.trim()) {
+      newErrors.Purpose = "Purpose is required";
+    }
+    if (!transactionsData.PaymentDate) {
+      newErrors.PaymentDate = "Payment date is required";
+    }
+    if (
+      transactionsData.Purpose === "Part Payment" &&
+      !transactionsData.NextInstallmentDate
+    ) {
+      newErrors.NextInstallmentDate = "Next installment date is required for Part Payment";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+     if (!validateForm()) return; // Stop if invalid
     // Handle form submission logic here
         try{
         const token =getCookieValue("token")
@@ -52,6 +78,8 @@ function AddCustomerTransaction({customerData}) {
             
             if (response.status === 200 || response.status === 201) {
                 alert("✅ Customer data updated successfully!");
+                setErrors({});
+
                 router.back(); // ✅ Go to previous page
             }
             setTransactionData({TransactionAmount:"",Purpose:"",PaymentDate:"",NextInstallmentDate:""})
@@ -100,6 +128,9 @@ function AddCustomerTransaction({customerData}) {
                     // readOnly
                     onChange={handleInputChange}
                   />
+                   {errors.TransactionAmount && (
+                <p className={styles.error}>{errors.TransactionAmount}</p>
+              )}
                 </div>
                  <div className={styles.input_container}>
                         <label htmlFor="PaymentDate">Payment Date</label>
@@ -111,6 +142,9 @@ function AddCustomerTransaction({customerData}) {
                         value={transactionsData.PaymentDate}
                         onChange={handleInputChange}
                         />
+                         {errors.PaymentDate && (
+                <p className={styles.error}>{errors.PaymentDate}</p>
+              )}
                     </div>
 
                 <select id="purpose" className={styles.form_control} name='Purpose' value={transactionsData.Purpose} onChange={handleInputChange}>
@@ -119,6 +153,10 @@ function AddCustomerTransaction({customerData}) {
                     <option>Part Payment</option>
                     <option>Additional Service Charge</option>
                 </select>
+                {errors.Purpose && (
+              <p className={styles.error}>{errors.Purpose}</p>
+            )}
+
                 {transactionsData.Purpose === 'Part Payment' && (
                     <div className={styles.input_container}>
                         <label htmlFor="NextInstallmentDate">Next Installment Date</label>
@@ -130,6 +168,9 @@ function AddCustomerTransaction({customerData}) {
                         value={transactionsData.NextInstallmentDate}
                         onChange={handleInputChange}
                         />
+                         {errors.NextInstallmentDate && (
+                  <p className={styles.error}>{errors.NextInstallmentDate}</p>
+                )}
                     </div>
                 )}
 

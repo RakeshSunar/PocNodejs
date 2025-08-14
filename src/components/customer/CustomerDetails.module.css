@@ -126,3 +126,8 @@
 .btn_primary:hover {
   background-color: #2d3748;
 }
+.error {
+  color: #ef4444;
+  font-size: 12px;
+  margin-top: 4px;
+}

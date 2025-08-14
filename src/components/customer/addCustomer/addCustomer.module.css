@@ -113,7 +113,7 @@
   border-radius: 8px;
   font-size: 14px;
   color: #6b7280;
-  margin-bottom: 24px;
+  margin-bottom: 12px;
   border: 1px solid #e5e7eb;
 }
 
@@ -220,6 +220,12 @@
 .saveButton:focus {
   outline: none;
   box-shadow: 0 0 0 3px rgba(31, 41, 55, 0.1);
+}
+
+.error {
+  color: #ef4444;
+  font-size: 12px;  
+  margin-bottom: 4px;
 }
 
 /* Responsive Design */
